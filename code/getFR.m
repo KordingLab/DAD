@@ -13,7 +13,7 @@ N=[];
 
 for j=1:ttsz(1)
     
-    minT  = tt(j, 8);
+    minT  = tt(j, 10);
     maxT  = tt(j,13);
     grid=minT:delT:maxT;
     binNum=length(grid)-1;
