@@ -1,4 +1,3 @@
-clear all
 delT=0.2;
 winSz=1.1;
 thresh=0.8;
@@ -10,24 +9,16 @@ fldnum=5;
 
 C.gnum=200;
 C.anum= 20 ;
-
 C.pig=linspace(-pi,pi,C.gnum);
 C.scg=linspace(0.8, 1.2, C.anum);
 
-%close all
-
 load Chewie_12192013;
-%load Chewie_03192015;
 Dtr1= out_struct;
 
 load Chewie_10032013;
 Dtr2= out_struct;
-%load Chewie_10032013;
-%Dtr3= out_struct;
 load Mihi_small;
 Dte=out_struct;
-
-
 
 tttr1  = ff_trial_table_co(Dtr1);
 tttr2  = ff_trial_table_co(Dtr2);
@@ -36,7 +27,6 @@ ttte  =  ff_trial_table_co(Dte);
 [Y1   , X1 ,  T1,  N1]  =  getFR(Dtr1,  delT,  tttr1 );
 [Y2   , X2 ,  T2,  N2]  =  getFR(Dtr2,  delT,  tttr2 );
 [Y3   , X3 ,  T3,  N3]  =  getFR(Dte,   delT,  ttte );
-
 
 clear Dtr1
 clear Dtr2
@@ -54,19 +44,11 @@ th1u=inf;
 th2l=1;
 th2u=inf;
 
-%%Train and test data
-%Ytr=[Y1;Y2];
-
-
-
-
 XN1=normal(X1);
 XN2=normal(X2);
 Xtr=[ XN1; XN2 ];
 Ttr=[ T1; T2 ];
 Ntr=[N1; N2];
-
-
 
 dsz=size(Y3,1);
 dsz1=round(dsz/3);
@@ -78,10 +60,8 @@ Nte=N3(dsz1+1:end, :);
 
 dimte=size(Yte,2);
 
-
-%tindte= (  Tte ~=7 & Tte ~= 0  & Tte~=2);
-%tindtr= (  Ttr ~=7 & Ttr ~= 0  & Ttr~=2 );
-
+tindte= (  Tte ~=7 & Tte ~= 0  & Tte~=2);
+tindtr= (  Ttr ~=7 & Ttr ~= 0  & Ttr~=2 );
 
 Xtr= Xtr(tindtr,:);
 Ttr= Ttr(tindtr,:);
@@ -91,9 +71,6 @@ Tte=Tte(tindte);
 Yte=Yte(tindte,:);
 Xte=Xte(tindte,:);
 Nte=Nte(tindte,:);
-
-
-
 
 
 XteN=normal(Xte);
