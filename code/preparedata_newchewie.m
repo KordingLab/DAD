@@ -1,8 +1,15 @@
-function Data = preparedata_newchewie(Dtr1,Dte,delT,removelabel)
+function Data = preparedata_newchewie(delT,removelabel)
 
-if nargin<3
+if nargin<2
     removelabel=[];
 end
+
+load Mihi_small;
+Dtr1=out_struct;
+
+datanum = '16'; % can choose between '15 and '16'
+load(['Chewie_M1_CO_VR_BL_07',datanum,'2015.mat']);
+Dte= out_struct;
 
 tttr1  = ff_trial_table_co(Dtr1);
 ttte  =  ff_trial_table_co(Dte);
