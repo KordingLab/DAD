@@ -1,6 +1,7 @@
-function Results = DAD(Ytest,Xtrain,C,Xtest)
-% need Xtest to compute errors
+function Results = DAD2(Ytest,Xtrain,C,Xtest)
 
+% need Xtest to compute errors
+Results=[];
 if nargin<4
     Xtest = 0;
 end
@@ -16,16 +17,18 @@ C.ySz = size(Yter,2);
 C.dSzE = size(Y0,1);
 C.dszt = size(Yter,1);
 
-[~, ~, LP]= pca(Yter);
+[~,~, LP] = pca(Yter);
 
 if length(idx1)>1 && length(idx2)>1 && min(LP)>C.EigRatio*max(LP)
 
 % (Step 2) Dimensionality Reduction 
 my=mean(Yter);
-myV=ones(length(idx2),1)*my;
+myV=ones(size(Yter,1),1)*my;
 YterZ=Yter-myV;
 [~,~,~,~,F]  = factoran(YterZ,2);
 
+
+%%%%%%% Compute YLo
 v1=ones(C.dszt,1);
 v1L=ones(C.dSzE,1);
 Yreg=[Y0(idx2,:),v1];
@@ -36,7 +39,34 @@ YLoAll= YteL*What;
 YLo2=   normal(YLoAll);
 
 % (Step 2) Correcting the rotation and scaling       %%%%%%%%%
-[YrKL, ~, KLD, ~, ~, ~] = minKL(YLo2, X0, C);
+
+% remove outliers from F
+%dist2mn = pdist2(mean(F),F);
+%idd =find(dist2mn>4); 
+%idd2 = idx2; idd2(idd)=[];
+
+%F2=F; F2(idd,:)=[]; 
+%Ys2 = Ytest(idd2,idx1);
+%W1 = pinv(Ys2)*F2;
+
+%Xnm = normal(Xtrain);
+%Fnm = normal(F2);
+%Xscale = Xnm./repmat([max(abs(Fnm(:,1))),max(abs(Fnm(:,2)))],size(Xnm,1),1);
+
+[YrKL, ~, KLD,~, ~,~,~] = minKL2(YLo2,normal(Xtrain),C);
+
+%[YrKLF, ~, KLD,~, ~,~,RM,sconst] = minKL(F,X0,C);
+%[YrKL, ~, KLD, ~, ~, ~] = minKL(YLo2, X0, C);
+
+%Htot = W1*Hmat;
+
+%figure; 
+%subplot(2,3,1); colorData2014(F,Ttest(idx2)); title('F')
+%subplot(2,3,2); colorData2014(YrKL,Ttest(idx2)); title('YrKLF')
+%subplot(2,3,3); colorData2014(Ytest(idx2,idx1)*Htot,Ttest(idx2)); title('YLo2')
+%subplot(2,3,4); colorData2014(YrKL,Ttest(idx2)); title('YrKL')
+%subplot(2,3,5); colorData2014(Xtest,Ttest); title('Xtest')
+%subplot(2,3,6); colorData2014(X0,Ttrain); title('Xtrain')
 
 if Xtest~=0
     XteN = normal(Xtest); % ground truth (labels for Ytest)
@@ -48,7 +78,6 @@ else
     Results.sstot = 0;
     Results.ssKL = 0;
 end
-
 
 Results.vKL = min(KLD);
 Results.YrKLMat = YrKL; %predicted kinematics

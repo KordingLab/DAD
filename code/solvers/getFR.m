@@ -1,4 +1,4 @@
-function [Y, X, T, N]  =  getFR_Miller_eqbin( D, delT,tt)
+function [Y, X, T, N]  =  getFR( D, delT,tt)
 
 ne = D.units;
 v   = D.vel;
@@ -15,7 +15,9 @@ for j=1:ttsz(1)
     
     minT  = tt(j, 10);
     maxT  = tt(j,13);
-    grid=minT:delT:maxT;
+    
+    grid= minT:delT:maxT;
+        
     binNum=length(grid)-1;
     
     if binNum>0
@@ -47,8 +49,8 @@ for j=1:ttsz(1)
         N=[N;1;zeros(max(size(TP,1)-1,0),1)];
         
         
-    end;
-end;
+    end
+end
 
 return;
 

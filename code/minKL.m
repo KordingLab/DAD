@@ -1,6 +1,9 @@
-function [YrKL, minVal, KLD, KLS, YLr, YLsc] = minKL(Y,X,C)
+function [YrKL, minVal, KLD, KLS, YLr, YLsc,RM,sconst] = minKL(Y,X,C)
 YLo2 = Y;
 XAll = X;
+
+% remove
+
 
 cosg = cos(C.pig);
 sing  = sin(C.pig);
@@ -27,6 +30,10 @@ for p=1:2*C.gnum
 end
 
 [~, minInd ]   = min( KLD );
+pm = mod(minInd-1,C.gnum)+1;
+ps = 2*floor((minInd-1)/C.gnum)-1;
+RM = [ps,0;0,1]*[cosg(pm),-sing(pm);sing(pm),cosg(pm)];    
+
 YrKLR  = YLr{minInd};
 
 
@@ -41,5 +48,6 @@ end
 
 [minVal , minInd]   = min( KLS );
 YrKL  = YLsc{minInd};
+sconst = C.scg(minInd);
                     
 end % end main function

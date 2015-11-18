@@ -3,8 +3,6 @@ function colorData2014(X,ID)
 idsz=max(ID);
 dsz=size(X,2);
 
-figure
-
 for i=0:idsz
     id=(ID==i);
     

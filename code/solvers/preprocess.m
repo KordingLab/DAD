@@ -1,14 +1,14 @@
-function [Yout, idx1, idx2] = preprocess(Y,th1l,th1u,th2l,th2u,winSzh)
+function [Yout, idx1, idx2] = preprocess(Y0,th1l,th1u,th2l,th2u,winSzh)
 %th1l = lower threshold on columns of Y (neurons), val > th1l*mean 
 %th1u = upper threshold on columns of Y (neurons), val < th1u*mean 
 %th2l = lower threshold on rows of Y (time points), val > th1l*mean 
 %th2u = upper threshold on rows of Y (time points), val < th1u*mean 
 
-m1=std(Y);
+m1=std(Y0);
 th1lm = th1l*mean(m1);
 th1um = th1u*mean(m1);
 idx1=find( m1>th1lm  & m1<th1um );
-Y=Y(:,idx1);
+Y=Y0(:,idx1);
 
 dsz=size(Y,1);
 

@@ -3,16 +3,20 @@
 % initialize parameters
 C = setinputparams();
 
-% Load neural (Y) and movement (X) datasets
-load Chewie_12192013;
-Dtr1= out_struct;
+C.delT=.2;
+Data = preparedata_chewiemihi(C.delT);
+Data2x = preparedata_chewiemihi(C.delT/2);
 
-load Chewie_10032013;
-Dtr2= out_struct;
-load Mihi_small;
-Dte=out_struct;
+%%%%
+removedir = [0,2,7];
+[Xtest,Ytest,Ttest,Ttrain,Xtrain] = removedirdata(Data,removedir);
+   
+C.th1l = 1;
+C.th1u = inf;
+C.th2l = 1;
+C.th2u = inf;
 
-Data = preparedata_chewiemihi(Dtr1,Dtr2,Dte,C.delT);
+Results = DAD2(Ytest,Xtrain2x,C);
 
-Results = DAD(Data.Ytest,Data.Xtrain,C,Data.Xtest);
+
 

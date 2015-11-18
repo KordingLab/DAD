@@ -1,9 +1,11 @@
-function [YrKL, minVal, KLD, KLS, YLr, YLsc]=minKL(YLo2,XAll,C)
+function [YrKL, minVal, KLD, KLS, YLr, YLsc,H] = minKL(Y,X,C)
+YLo2 = Y;
+XAll = X;
 
 cosg = cos(C.pig);
 sing  = sin(C.pig);
 
-k=ceil(size(X0,1)^0.3);
+k=ceil(size(XAll,1)^0.3);
 dMatX=getDist(XAll,XAll);
 sdMatX=sort(dMatX);
 rhoX=sdMatX(k,:);
@@ -18,26 +20,32 @@ for p=1:2*C.gnum
     rm = [ps,0;0,1]*[cosg(pm),-sing(pm);sing(pm),cosg(pm)];
     YLr{p} = YLo2 * rm;
     dMatT=getDist( XAll , YLr{p} );
-    [sdMatT, sdIndT]=sort(dMatT);
+    [sdMatT,~]=sort(dMatT);
     sdMat=sdMatT;
     rhoY=sdMat(k,:);
     KLD(p)=mean( log( rhoY ./ rhoX ) )+log( C.dSzE / C.dASz );
 end
 
 [~, minInd ]   = min( KLD );
+pm = mod(minInd-1,C.gnum)+1;
+ps = 2*floor((minInd-1)/C.gnum)-1;
+RM = [ps,0;0,1]*[cosg(pm),-sing(pm);sing(pm),cosg(pm)];    
+
 YrKLR  = YLr{minInd};
 
-
 for p=1:C.anum
-YLsc{p}    = C.scg(p)*YrKLR;
-dMatT    = getDist( XAll , YLsc{p} );
-[sdMatT, sdIndT] = sort(dMatT);
-sdMat=sdMatT;
-rhoY=sdMat(k,:);
-KLS(p)=mean( log( rhoY ./ rhoX ) )+log( C.dSzE / C.dASz );
-end;
+    YLsc{p}    = C.scg(p)*YrKLR;
+    dMatT    = getDist( XAll , YLsc{p} );
+    [sdMatT, ~] = sort(dMatT);
+    sdMat=sdMatT;
+    rhoY=sdMat(k,:);
+    KLS(p)=mean( log( rhoY ./ rhoX ) )+log( C.dSzE / C.dASz );
+end
 
 [minVal , minInd]   = min( KLS );
 YrKL  = YLsc{minInd};
+sconst = C.scg(minInd);
+
+H = S1*sconst*RM;
                     
-end
+end % end main function
