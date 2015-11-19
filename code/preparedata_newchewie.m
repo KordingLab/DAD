@@ -14,8 +14,8 @@ Dte= out_struct;
 tttr1  = ff_trial_table_co(Dtr1);
 ttte  =  ff_trial_table_co(Dte);
 
-[~   , X1 ,  T1,  N1]  =  getFR(Dtr1,  delT,  tttr1 );
-[Y3   , X3 ,  T3,  N3]  =  getFR(Dte,   delT,  ttte );
+[~   , X1 ,  T1,  N1]  =  getFR_overlap(Dtr1,  delT,  tttr1 , delT/2);
+[Y3   , X3 ,  T3,  N3]  =  getFR_overlap(Dte,   delT,  ttte, delT/2);
 
 clear Dtr1
 clear Dte
