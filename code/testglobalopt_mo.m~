@@ -29,21 +29,8 @@ y_sz= size(Ysn,2)
 k=ceil(dsz^0.5);
 
 
-p1=kde(Xsup',std(Xsup)'./10);
-p1 = ksize(p1, 'lcv');
-p2=kde(X',std(X)'./10);
-p2 = ksize(p2, 'lcv');
+p1=kde(Xsup,std(Xsup)/100*o)
 
-
-
-
-%klval1= kld(p1,p2)
-%klval2= kld(p2,p1)
-%tic
-% [~,sdMat]= knnsearch(X, X, 'K', k, 'NSMethod', 'kdtree');
-% rhoY=sdMat(:,end);
-% toc
-%klval3 =evalKLDiv_mo(Wsup,Ysn,X,k,rhoY)
 
 %Wgd=2*rand(2,2)-1
 
