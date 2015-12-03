@@ -1,6 +1,6 @@
 function Data = preparedata_chewiemihi(delT,removelabel)
 
-if nargin<3
+if nargin<2
     removelabel=[];
 end
 
@@ -38,10 +38,18 @@ Ntr=[N1; N2];
 dsz=size(Y3,1);
 dsz1=round(dsz/3);
 
-Yte=Y3(dsz1+1:end, :);
-Xte=X3(dsz1+1:end, :);
-Tte=T3(dsz1+1:end, :);
-Nte=N3(dsz1+1:end, :);
+% Yte=Y3(dsz1+1:end, :);
+% Xte=X3(dsz1+1:end, :);
+% Tte=T3(dsz1+1:end, :);
+% Nte=N3(dsz1+1:end, :);
+
+Yte=Y3;
+Xte=X3;
+Tte=T3;
+Nte=N3;
+
+
+
 
 tindte = [];
 tindtr = [];

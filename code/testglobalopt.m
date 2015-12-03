@@ -13,6 +13,7 @@ Nneurons = size(Y2,2);
 W0 = sprandn(Nneurons,2,0.5);
 
 fKL = @(W)evalKLDiv(W,Xtrain,Y2,10,rhoX);
-options = optimoptions('fminunc','Algorithm','quasi-newton','GradObj','off','Display','iter-detailed');
 
+options = optimoptions('fminunc','Algorithm','quasi-newton','GradObj','off','Display','iter-detailed');
 [X,FVAL] = fminunc(fKL,W2,options);
+
