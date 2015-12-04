@@ -27,7 +27,7 @@ myV=ones(size(Yter,1),1)*my;
 YterZ=Yter-myV;
 [~,~,~,~,F]  = factoran(YterZ,2);
 
-figure; colorData2014(normal(F),Ttest(idx2))
+figure; subplot(1,2,1); colorData2014(normal(F),Ttest(idx2))
 
 %%%%%%% Compute YLo
 v1=ones(C.dszt,1);
@@ -38,6 +38,8 @@ lam=    2*norm(Yreg'*Yreg);
 What=   pinv(Yreg'*Yreg+ lam*eye(size(Yreg,2)))*Yreg'*F;
 YLoAll= YteL*What;
 YLo2=   normal(YLoAll);
+
+subplot(1,2,2); colorData2014(YLo2,Ttest)
 
 % (Step 2) Correcting the rotation and scaling       %%%%%%%%%
 

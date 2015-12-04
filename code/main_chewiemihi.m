@@ -9,7 +9,7 @@ Data2x = preparedata_chewiemihi(C.delT/2);
 
 %%%%
 removedir = [0,2,7];
-[Xtest,Ytest,Ttest,Ttrain,Xtrain] = removedirdata(Data,removedir);
+[Xtest,Ytest,Ttest,Xtrain,~,Ttrain] = removedirdata(Data,removedir);
    
 C.th1l = 1;
 C.th1u = inf;

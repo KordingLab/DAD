@@ -66,9 +66,9 @@ lamnum=2000;
 fldnum= 10;
 [W, Xhat, R2Max]= crossVaL(Ytr, XtrN, Yte, lamnum, fldnum);
 XhatN= normal(Xhat);
-sstot = sum( var(XteN) );
-ssKL = sum( mean((XteN - XhatN).^2) );
-R2Sup =   1-ssKL/sstot;
+
+R2Sup = evalR2(Xhat,Xte);
+
 save ResSup  R2Sup  XhatN Xte XteN Xtr XtrN  Tte Nte  Ntr Ttr  Yte Ytr W 
                
 return;

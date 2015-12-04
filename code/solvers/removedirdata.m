@@ -1,4 +1,4 @@
-function [Xtest,Ytest,Ttest,Ttrain,Xtrain] = removedirdata(Data,removedir)
+function [Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain] = removedirdata(Data,removedir)
 
 testid=[]; trainid =[];
 for i=1:length(removedir)
@@ -10,5 +10,12 @@ Xtest = Data.Xtest; Xtest(testid,:)=[];
 Ttest = Data.Ttest; Ttest(testid)=[];
 Ttrain = Data.Ttrain; Ttrain(trainid)=[];
 Xtrain = Data.Xtrain; Xtrain(trainid,:)=[];
+
+if isfield(Data,'Ytrain')
+    Ytrain = Data.Ytrain; 
+    Ytrain(trainid,:)=[];
+else
+    Ytrain = 0;
+end
 
 end
