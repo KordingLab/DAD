@@ -1,5 +1,5 @@
 
-function  [W, Xhat, R2Max]= crossVaL(Ytr, Xtr, Yte, lamnum, fldnum)
+function  [W, Xhat, R2Max, lamc]= crossVaL(Ytr, Xtr, Yte, lamnum, fldnum)
 
 d= size(Ytr);
 
@@ -36,7 +36,7 @@ W = pinv(YE'*YE+lamc*eye(d(2))) * YE'*Xtr;
 dE= size(Yte);
 YE2 = [Yte, ones(dE(1),1)];
 
-Xhat = YE2*W;
+Xhat = normal(YE2*W);
 
 return;
 
