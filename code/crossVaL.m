@@ -33,10 +33,8 @@ lamc= lamvect(Ind);
 d=size(YE);
 W = pinv(YE'*YE+lamc*eye(d(2))) * YE'*Xtr;
 
-dE= size(Yte);
-YE2 = [Yte, ones(dE(1),1)];
+Xhat = YE*W;
 
-Xhat = normal(YE2*W);
 
-return;
+return
 

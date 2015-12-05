@@ -1,8 +1,6 @@
 function KLD = evalKLDiv_grid(W,X,ydim,p1)
 %function KLD = evalKLDiv_mo(W,X,Y,k)
-
-
-
+lambda = .1;
 
 xdim= size(X, 2);
 %ydim= size(W, 2);
@@ -13,7 +11,10 @@ Yhat = X*WMat;
 
 p2=prob_grid(Yhat);
 
-KLD=p1'*log(p1./p2);
+KLD = norm(log(p1(:))-log(p2(:)))./norm(log(p1(:)))+ lambda*norm(W(:)) ;
+
+%KLD=p1'*log(p1./p2);
+
 %dMatT=getDist(Y,Yhat);
 %[sdMatT,~]=sort(dMatT);
 

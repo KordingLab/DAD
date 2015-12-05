@@ -48,7 +48,6 @@ Results = DAD2(Ytest,Xtrain,C,Xtest,Ttest,Ttrain);
 
 % plot original data
 figure; colorData2014(Data.Xtest, Data.Ttest)
-
 figure; colorData2014(Results.YrKLMat, Data.Ttest)
 
 
