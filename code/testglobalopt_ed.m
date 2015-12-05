@@ -52,23 +52,19 @@ p_sup = prob_grid(normal(Xhat_sup));
 
 %% rotate then rescale/shear
 
-R=rotmat(20);
+R=rotmat(40);
 What_init = Wsup*R;
 Xhat_init = normal([Ytest, ones(size(Ytest,1),1)]*What_init);
 
 % compute rotation + rescaling
-numiter=10;
-[What,FVAL,R2,R3] = rotate2KL(Xtrain,Ytest_ext,What_init,numiter);
+numiter=5;
+[What,Results] = rotate2KL(Xtrain,Ytest_ext,What_init,numiter);
 Xhat_rot = Ytest_ext*What_init*R2;
 Xhat_dad = Ytest_ext*What*R2*R3;
 
+% plot results, compute error
 Errnew = heatmapfig(Xtrain,Xtest,Ttest,Xhat_sup,Xhat_init,Xhat_dad)
-
-
-%% plot results
-
-
-
+randbeep % plays random beep at end!
 
 
 
