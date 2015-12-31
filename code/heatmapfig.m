@@ -1,4 +1,4 @@
-function Err = heatmapfig(Xtrain,Xtest,Ttest,Xhat_sup,Xhat_init,Xhat_dad)
+function Err = heatmapfig(Xtrain,Xtest,Ttest,Xhat_sup,Xhat_init,Xhat_dad,bsz)
 
 % compute relative L2-norm norm(xhat - xtest)./norm(xtest)
 errmethod=1; %(set to 2 for R2 values)
@@ -28,14 +28,14 @@ if errmethod==2
 end
 
 figure;
-subplot(3,3,2); imagesc(log(reshape(p_train,50,50))); axis off
+subplot(3,3,2); imagesc(log(reshape(p_train,bsz,bsz))); axis off
 colormap hot; title('Kinematics Prior');
-subplot(3,3,4); imagesc(log(reshape(p_sup,50,50))); axis off
-colormap hot; title(['Supervised Heat Map (Err = ',num2str(Err.sup,3),'%)']);
-subplot(3,3,5); imagesc(log(reshape(p_init,50,50))); axis off
-colormap hot; title(['Initial point (Err = ',num2str(Err.init,3),'%)']);
-subplot(3,3,6); imagesc(log(reshape(p_dad,50,50))); axis off
-colormap hot; title(['DAD Heat Map (Err = ',num2str(Err.dad,3),'%)']);
+subplot(3,3,4); imagesc(log(reshape(p_sup,bsz,bsz))); axis off
+colormap hot; title(['Supervised Heat Map (Err = ',num2str(Err.sup,3),')']);
+subplot(3,3,5); imagesc(log(reshape(p_init,bsz,bsz))); axis off
+colormap hot; title(['Initial point (Err = ',num2str(Err.init,3),')']);
+subplot(3,3,6); imagesc(log(reshape(p_dad,bsz,bsz))); axis off
+colormap hot; title(['DAD Heat Map (Err = ',num2str(Err.dad,3),')']);
 
 subplot(3,3,7); hold off; colorData2014(Xhat_sup,Ttest); 
 axis([-3 3 -3 3]); title('Supervised')

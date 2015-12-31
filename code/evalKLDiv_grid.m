@@ -1,17 +1,16 @@
-function KLD = evalKLDiv_grid(W,X,ydim,p1)
+function KLD = evalKLDiv_grid(W,X,p1,bsz)
 %function KLD = evalKLDiv_mo(W,X,Y,k)
-lambda = .1;
 
-xdim= size(X, 2);
-%ydim= size(W, 2);
+%xdim= size(X, 2);
 
-WMat= reshape(W, xdim, ydim);
-Yhat = X*WMat;
+%WMat= reshape(W, xdim, ydim);
+Yhat = X*W;
+
 %Yhat=normal(Yhat);
 
-p2=prob_grid(Yhat);
+p2=prob_grid(Yhat,bsz);
 
-KLD = norm(log(p1(:))-log(p2(:)))./norm(log(p1(:)))+ lambda*norm(W(:)) ;
+KLD = norm(log(p1(:))-log(p2(:)))./norm(log(p1(:)));
 
 %KLD=p1'*log(p1./p2);
 

@@ -1,42 +1,94 @@
-%% prepare data
-Data = preparedata_chewiemihi(0.2,[1,2,5,7]);
-Data2x = preparedata_chewiemihi(0.08,[1,2,5,7]);
+%% (STEP 1) PREPARE DATA
+trsz = 250;
+yTs = 0.2;
+xTs = 0.08;
+Data = preparedata_chewiemihi(yTs);
+Data2x = preparedata_chewiemihi(xTs);
 
-std_thresh=1;
-iterNum =50;
-X=Data.Xtest;
-Y=Data.Ytest;
-stdY=std(Y);
-dsz= size(X,1);
+% remove directions
+removedir = [0,2,7];
+[Xtest,Ytest,Ttest,Xtrain,~,Ttrain] = removedirdata(Data,removedir);
+[Xtest2x,Ytest2x,Ttest2x,Xtrain2x,~,Ttrain2x] = removedirdata(Data,removedir);
 
-Ys= Y(:, stdY>0);
-stdYs=std(Ys);
-mstdYs=mean(stdYs);
-Ys = Ys(:, stdYs>std_thresh*mstdYs);
-mYs=mean(Ys);
-Ysn= Ys./(repmat(mYs,dsz,1));
-
-x_sz= size(X,2);
-y_sz= size(Ysn,2);
-
-trsz=round(dsz/2);
-Ytrain= Ysn(1:trsz,:);
-Ytrain_ext=[Ytrain,ones(trsz,1)];
-Xtrain=normal(X(1:trsz,:));
-Ttrain=Data.Ttest(1:trsz,:);
-Ytest= Ysn(trsz+1:end,:);
-Ytest_ext=[Ytest,ones(dsz-trsz,1)];
-Xtest=normal(X(trsz+1:end,:));
-Ttest=Data.Ttest(trsz+1:end);
-
-%% supervised learning
-fldnum=10;
-lamnum=500;
-[Wsup, ~, R2Max, lamc]= crossVaL(Ytrain, Xtrain, Ytest, lamnum, fldnum);
-
+%% (STEP 2) SUPERVISED LEARNING
+[Wsup,trainset,testset] = supdecoder(Xtest,Ytest,trsz);
+Yt2 = Ytest(testset,:);
+Ytest_ext = [Yt2, ones(size(Yt2,1),1)];
 Xhat_sup =Ytest_ext*Wsup;
-errSup= norm(Xhat_sup(:)-Xtest(:),2)./norm(Xtest(:));
+p_train = prob_grid(normal(Xtrain));
+
+Xt2 = Xtest(testset,:);
+errSup= norm(Xhat_sup(:)-Xt2(:),2)./norm(Xt2(:));
 p_sup = prob_grid(normal(Xhat_sup));
+
+%% (STEP 3) DAD - DISTRIBUTION ALIGNMENT DECODING
+
+C = setinputparams(); 
+C.th1l = 1;
+C.th1u = inf;
+C.th2l = 1;
+C.th2u = inf;
+
+ResultsDAD = DAD2(Yt2,Xtrain2x,C,Xtest,Ttest,Ttrain);
+Xhat_dad = ResultsDAD.YrKLMat;
+p_dad = prob_grid(normal(Xhat_dad));
+
+Xtest2 = normal(Xtest(testset,:));
+Err.sup = norm(Xhat_sup(:)-Xtest2(:))./norm(Xtest2(:));
+Err.dad = norm(Xhat_dad(:)-Xtest2(:))./norm(Xtest2(:));
+
+figure;
+subplot(1,3,1); imagesc(log(reshape(p_train,50,50)));
+axis off; colormap hot; title('Training Kinematics')
+subplot(1,3,2); imagesc(log(reshape(p_sup,50,50)));
+axis off; colormap hot; title(['Supervised Heatmap (', num2str(Err.sup,2),')'])
+subplot(1,3,3); imagesc(log(reshape(p_dad,50,50)));
+axis off; colormap hot; title(['DAD Heatmap (', num2str(Err.dad,2),')'])
+
+%% (STEP 4) APPLY KL++ TO OUTPUT OF DAD
+numiter = 5; numouter = 3;
+Wdad = pinv([Yt2, ones(size(Yt2,1),1)])*ResultsDAD.YrKLMat;
+
+[What_rotdad,ResultsKL] = rotate2KL(Xtrain,Ytest_ext,Wdad,numiter,numouter);
+Xhat_rotdad = Ytest_ext*ResultsKL.What{3}*ResultsKL.R{3};
+p_rotdad = prob_grid(normal(Xhat_rotdad));
+Err.rotdad = norm(Xhat_rotdad(:)-Xtest2(:))./norm(Xtest2(:));
+
+Errnew = heatmapfig(Xtrain,Xtest(testset,:),Ttest(testset),Xhat_sup,Xhat_rotdad,Xhat_dad)
+
+%%
+numiter = 5; numouter = 1;
+Wdad = pinv([Yt2, ones(size(Yt2,1),1)])*ResultsDAD.YLoMat;
+[What_rotdad,ResultsKL2] = rotate2KL(Xtrain,Ytest_ext,Wdad,numiter,numouter,bsz);
+Xhat_rotdad2 = Ytest_ext*ResultsKL2.What{3}*ResultsKL2.R{3};
+
+p_rotdad2 = prob_grid(normal(Xhat_rotdad),bsz);
+Err.rotdad2 = norm(Xhat_rotdad2(:)-Xtest2(:))./norm(Xtest2(:));
+
+
+
+
+%% rotate then rescale/shear
+
+R=rotmat(40);
+What_init = Wsup*R;
+Xhat_init = normal([Ytest, ones(size(Ytest,1),1)]*What_init);
+
+% compute rotation + rescaling
+numiter=5;
+[What,Results] = rotate2KL(Xtrain,Ytest_ext,What_init,numiter);
+Xhat_rot = Ytest_ext*Results.What{1}*Results.R{1};
+Xhat_dad = Ytest_ext*Results.What{2}*Results.R{2};
+
+% plot results, compute error
+Errnew = heatmapfig(Xtrain,Xtest,Ttest,Xhat_sup,Xhat_init,Xhat_dad)
+randbeep % plays random beep at end!
+
+%
+
+
+
+
 
 %% define KL function handle
 
@@ -49,23 +101,6 @@ p_sup = prob_grid(normal(Xhat_sup));
 %p_init = prob_grid(Xhat_init);
 %Xtest2 = normal(Xtest);
 %errPre = norm(Xhat_init(:)-Xtest2(:),2)./norm(Xtest2(:));
-
-%% rotate then rescale/shear
-
-R=rotmat(40);
-What_init = Wsup*R;
-Xhat_init = normal([Ytest, ones(size(Ytest,1),1)]*What_init);
-
-% compute rotation + rescaling
-numiter=5;
-[What,Results] = rotate2KL(Xtrain,Ytest_ext,What_init,numiter);
-Xhat_rot = Ytest_ext*What_init*R2;
-Xhat_dad = Ytest_ext*What*R2*R3;
-
-% plot results, compute error
-Errnew = heatmapfig(Xtrain,Xtest,Ttest,Xhat_sup,Xhat_init,Xhat_dad)
-randbeep % plays random beep at end!
-
 
 
 %% compute random initialization point

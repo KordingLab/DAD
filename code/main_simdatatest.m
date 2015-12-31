@@ -12,12 +12,14 @@ removedir = [0,2,7];
 [Xtest,Ytest,Ttest,Xtrain,~,Ttrain] = removedirdata(Data,removedir);
 [Xtest2x,Ytest2x,Ttest2x,Xtrain2x,~,Ttrain2x] = removedirdata(Data,removedir);
 
-C.th1l = 1;
-C.th1u = inf;
-C.th2l = 1;
-C.th2u = inf;
+% generate simulated Y (from true X)
+N = [100:100:1000];
+for i=2:length(N)
+    Ytest_sim{i} = simmotorneurons(Xtest2x,N(i));
+    ResultsDAD{i} = DADExpPCA(Ytest_sim{i},Xtrain,Xtest,C,Ttest,Ttrain);
+    i,
+    R2Val(i) = ResultsDAD{i}.R2KL;
+end
 
-ResultsDAD = DAD2(Ytest,Xtrain2x,C,Xtest,Ttest,Ttrain);
 
-Results = DADExpPCA(Ytest,Xtrain,Xtest,C,Ttest,Ttrain);
 

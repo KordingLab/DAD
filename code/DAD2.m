@@ -57,19 +57,23 @@ subplot(1,2,2); colorData2014(YLo2,Ttest)
 %Xscale = Xnm./repmat([max(abs(Fnm(:,1))),max(abs(Fnm(:,2)))],size(Xnm,1),1);
 
 [YrKL, ~, KLD,~, ~,~,~] = minKL2(YLo2,normal(Xtrain),C);
+Wcurr = pinv(YteL)*YrKL;
 
-%[YrKLF, ~, KLD,~, ~,~,RM,sconst] = minKL(F,X0,C);
-%[YrKL, ~, KLD, ~, ~, ~] = minKL(YLo2, X0, C);
+p_train = prob_grid(normal(Xtrain));
+fKL = @(W)evalKLDiv_grid(W,YteL,p_train,50);
 
-%Htot = W1*Hmat;
+optionsKL= optimoptions('fminunc','Algorithm','quasi-newton','GradObj','off',...
+                       'Display','iter-detailed', 'MaxFunEvals', 1.5e4);
+[What, FVAL]= fminunc(fKL, Wcurr, optionsKL);
 
-%figure; 
-%subplot(2,3,1); colorData2014(F,Ttest(idx2)); title('F')
-%subplot(2,3,2); colorData2014(YrKL,Ttest(idx2)); title('YrKLF')
-%subplot(2,3,3); colorData2014(Ytest(idx2,idx1)*Htot,Ttest(idx2)); title('YLo2')
-%subplot(2,3,4); colorData2014(YrKL,Ttest(idx2)); title('YrKL')
-%subplot(2,3,5); colorData2014(Xtest,Ttest); title('Xtest')
-%subplot(2,3,6); colorData2014(X0,Ttrain); title('Xtrain')
+
+% figure; 
+% subplot(2,3,1); colorData2014(F,Ttest(idx2)); title('F')
+% subplot(2,3,2); colorData2014(YrKL,Ttest(idx2)); title('YrKLF')
+% subplot(2,3,3); colorData2014(Ytest(idx2,idx1)*Htot,Ttest(idx2)); title('YLo2')
+% subplot(2,3,4); colorData2014(YrKL,Ttest(idx2)); title('YrKL')
+% subplot(2,3,5); colorData2014(Xtest,Ttest); title('Xtest')
+% subplot(2,3,6); colorData2014(X0,Ttrain); title('Xtrain')
 
 if Xtest~=0
     XteN = normal(Xtest); % ground truth (labels for Ytest)
@@ -83,6 +87,8 @@ else
 end
 
 Results.vKL = min(KLD);
+Results.W0 = What; %predicted kinematics
+Results.What = What; %predicted kinematics
 Results.YrKLMat = YrKL; %predicted kinematics
 Results.YLoMat = YLo2; % low -dimensional projection 
 Results.idx1Mat = idx1; % rows used for training decoder

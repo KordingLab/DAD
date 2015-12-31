@@ -1,8 +1,11 @@
-function [p1, XN]= prob_grid(X)
+function [p1, XN]= prob_grid(X,bsz)
 %%input a 2-d dataset
 %%The denisity function of dataset  using KNN smoothing
 
-bsz=50;
+if nargin<2
+    bsz=50;
+end
+
 XN=normal(X);
 
 %if nargin==1

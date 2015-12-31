@@ -15,23 +15,8 @@ Ys = Ys(:, stdYs>std_thresh*mstdYs);
 mYs=mean(Ys);
 Ysn= Ys./(repmat(mYs,dsz,1));
 
-
 x_sz= size(X,2);
 y_sz= size(Ysn,2);
-
-trsz=round(dsz/2);
-Ytrain= Ysn(1:trsz,:);
-Ytrain_ext=[Ytrain,ones(trsz,1)];
-Xtrain=normal(X(1:trsz,:));
-Ttrain=Data.Ttest(1:trsz,:);
-Ytest= Ysn(trsz+1:end,:);
-Ytest_ext=[Ytest,ones(dsz-trsz,1)];
-Xtest=normal(X(trsz+1:end,:));
-Ttest=Data.Ttest(trsz+1:end);
-
-fldnum=10;
-lamnum=500;
-[Wsup, Xhat, R2Max, lamc]= crossVaL(Ytrain, Xtrain, Ytest, lamnum, fldnum);
 
 
 
