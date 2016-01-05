@@ -9,7 +9,7 @@ magV = norms(X')';
 theta_dir = atan2(X(:,2),X(:,1));
 
 pref_dir = 2*pi*rand(N,1);
-x0 = abs(randn(N,1)/Ts);
+x0 = max(0,abs(randn(N,1)) - exp(Ts));
 amod = randn(N,1)*0.09;
 
 FRates = zeros(T,N);
