@@ -1,4 +1,5 @@
 function R2 = evalR2(X,Y)
+
 Y = normal(Y);
 X= normal(X);
 sstot = sum( var(Y) );

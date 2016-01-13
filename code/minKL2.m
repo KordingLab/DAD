@@ -1,18 +1,19 @@
-function [YrKL, minVal, KLD, KLS, YLr, YLsc,RM,sconst] = minKL2(Y,X,C)
+function [YrKL, minVal, KLD, KLS, YLr, YLsc,RM,sconst] = minKL2(Y,X,C,k)
 YLo2 = Y;
 XAll = X;
 
 cosg = cos(C.pig);
 sing  = sin(C.pig);
 
-k=ceil(size(XAll,1)^0.3);
-%k=ceil(size(YLo2,1)^0.3);
+k0=ceil(size(XAll,1)^0.3);
 dMatX=getDist(XAll,XAll);
 sdMatX=sort(dMatX);
-rhoX=sdMatX(k,:);
+rhoX=sdMatX(k0,:);
 
 % reset k based upon number of new data points
-k=ceil(size(YLo2,1)^0.3);
+if nargin<4
+    k=ceil(size(YLo2,1)^0.3);
+end
 YLr  = cell(2*C.gnum,1);
 YLsc = cell(C.anum,1);
 KLD = zeros(2*C.gnum,1);

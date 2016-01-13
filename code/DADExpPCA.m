@@ -7,21 +7,27 @@ if nargin<4
 end
 
 X0 = normal(Xtrain);
+
+whichnan = isnan(Ytest);
+Ytest(whichnan)=0;
 Y0 = Ytest;
 
 % (Step 1) Preprocessing 
 %[ Yter , idx1, idx2] = preprocess( Y0 , C.th1l , C.th1u , C.th2l , C.th2u, C.winsz);
 
-
 [V, ~, ~] = ExpFamPCA(Y0,2);
 YLo2=   normal(V);
 
-[YrKL, ~, KLD,~, ~,~,~] = minKL2(YLo2,X0,C);
+figure;
+subplot(1,3,1); colorData2014(Xtest,Ttest); 
+subplot(1,3,2); colorData2014(V,Ttest); 
 
-% figure; 
-% subplot(1,3,1); colorData2014(Xtest,Ttest); 
-% subplot(1,3,2); colorData2014(V,Ttest); 
-% subplot(1,3,3); colorData2014(YrKL,Ttest)
+%[YrKL, ~, KLD] = minKL_grid(YLo2,X0,C);
+%[YrKL, ~, KLD] = minKL2(YLo2,X0,C);
+[YrKL, ~, KLD] = minKL_grid(YLo2,X0,C,'L2');
+
+
+% figure; subplot(1,3,3); colorData2014(YrKL,Ttest)
 
 if Xtest~=0
     XteN = normal(Xtest); % ground truth (labels for Ytest)

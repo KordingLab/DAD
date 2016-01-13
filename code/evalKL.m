@@ -2,9 +2,6 @@ function KLD = evalKL(X,Y,k,rhoX)
 
 if nargin<4
     k=ceil(size(X,1)^0.3);
-    dMatX=getDist(XAll,XAll);
-    sdMatX=sort(dMatX);
-    rhoX=sdMatX(k,:);
 end
     
 dMatT=getDist(X,Y);
