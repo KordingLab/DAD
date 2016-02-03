@@ -11,6 +11,7 @@ Ts=.20;
 psamp = 0.15;
 numsteps = 9;
 numsol = 5;
+Niter = 50;
 
 for outiter = 1:length(psamp)
     
@@ -19,7 +20,7 @@ for outiter = 1:length(psamp)
     if percent_samp==0
         numIter=1;
     else
-        numIter=20;
+        numIter=Niter;
     end
 
     if outiter == 1
