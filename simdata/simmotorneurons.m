@@ -1,11 +1,15 @@
-function [Y,TC] = simmotorneurons(X,N,method)
+function [Y,TC] = simmotorneurons(X,N,model,linkfn)
 % X is a T x 2 matrix (kinematics)
 % N = number of neurons to simulate
 % Ts = sampling period (X)
 % parameters are optimized for samp. period Ts = 0.2 (200 ms)
 
+if nargin<4
+    linkfn = 'exp';
+end
+
 if nargin<3
-    method = 'base';
+    model = 'base';
 end
 
 T = size(X,1);
@@ -36,17 +40,25 @@ for i=1:N
     
     % (6) creates clusters with spread similar to real data 
     % (USE FOR SIMULATIONS)
-    if strcmp(method,'base')
+    if strcmp(model,'base')
         amod = ones(N,1);
         x0 = randn(N,1)*0.05;
         In(:,i) = (1/mean(magV))*magV.*cos(theta_dir - pref_dir(i)) + x0(i);
     
-    elseif strcmp(method,'modbase')
+    elseif strcmp(model,'modbase')
         % (7) added modulation and baseline
         amod = ones(N,1)+randn(N,1)*0.02; 
         x0 = randn(N,1)*0.05;
         In(:,i) = amod(i)*(1/mean(magV))*magV.*cos(theta_dir - pref_dir(i)) + x0(i);
-    
+        
+    elseif strcmp(model,'3D')
+        % (7) added modulation and baseline + speed
+        amod = ones(N,1)+randn(N,1)*0.02; 
+        cspeed = ones(N,1)+randn(N,1)*0.05; 
+        x0 = randn(N,1)*0.05;
+        In(:,i) = amod(i)*(1/mean(magV))*magV.*cos(theta_dir - pref_dir(i)) + x0(i) + cspeed(i)*(1/mean(magV))*magV;
+    else
+       error('That model doesnt exist!!!!')
     end
     
     % (7) creates garbage
@@ -55,7 +67,11 @@ for i=1:N
     
 end
 
-Y = poissrnd(exp(In));
+if strcmp(linkfn,'exp')
+    Y = poissrnd(exp(In));
+else
+    Y = poissrnd(max(0,In));
+end
 
 TC.amod = amod;
 TC.x0 = x0;
