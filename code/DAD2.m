@@ -25,11 +25,11 @@ if length(idx1)>1 && length(idx2)>1 && min(LP)>C.EigRatio*max(LP)
 my=mean(Yter);
 myV=ones(size(Yter,1),1)*my;
 YterZ=Yter-myV;
-[~,~,~,~,F]  = factoran(YterZ,3);
+[~,~,~,~,F]  = factoran(YterZ,2);
 
-figure; 
-subplot(1,3,1); colorData2014(Xtest,Ttest)
-subplot(1,3,2); colorData2014(normal(F),Ttest(idx2))
+% figure; 
+% subplot(1,3,1); colorData2014(Xtest,Ttest)
+% subplot(1,3,2); colorData2014(normal(F),Ttest(idx2))
 
 %%%%%%% Compute YLo
 v1=ones(C.dszt,1);
@@ -41,7 +41,7 @@ What=   pinv(Yreg'*Yreg+ lam*eye(size(Yreg,2)))*Yreg'*F;
 YLoAll= YteL*What;
 YLo2=   normal(YLoAll);
 
-subplot(1,3,3); colorData2014(YLo2,Ttest)
+%subplot(1,3,3); colorData2014(YLo2,Ttest)
 
 % (Step 2) Correcting the rotation and scaling       %%%%%%%%%
 
@@ -71,8 +71,6 @@ Results.mMat = my; % mean vector
 Results.thMat = [C.th1l , C.th1u , C.th2l , C.th2u]; % thresholds used to preprocess data
 
 end
-
-
 
 
 

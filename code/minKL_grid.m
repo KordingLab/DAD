@@ -1,4 +1,4 @@
-function Results = minKL_grid(V,X,angVals,sVals,method,k)
+function Results = minKL_grid(V,X,angVals,sVals,method,k,numsol)
 % minimize KL (rotation + scaling) over a normalized grid
 % input = Y >> test dataset
 % input = X >> kinematics data (target distribution)
@@ -12,10 +12,20 @@ bsz = 50; % dimension of grid (for computing heat maps)
 if nargin<5
     method = 'KL';
     k=[];
+    numsol = 1;
 end
 
 if nargin<6
     k=[];
+    numsol = 1;
+end
+
+if nargin<7
+    numsol = 1;
+end
+
+if length(k)<1
+    k = ceil(size(V,1)^(1/3)); % set to default val of K for training distribution!
 end
 
 % initialize variables
@@ -27,18 +37,15 @@ VLsc = cell(numS,1);
 KLD = zeros(2*numA,1);
 KLS = zeros(numS,1);
 
-%% Step 1. Dimensionality reduction
+%% Step 1. Find best rotation (grid search)
 
 % normalize embedding
 mnV = mean(V);
-V = normal(V-repmat(mnV,size(V,1),1));
-
-Results.V = V;
-
-%% Step 1. Find best rotation (grid search)
+V = normal(V-repmat(mnV,size(V,1),1)); Results.V = V;
 
 % compute heat map for training data
-p_train = prob_grid(normal(X),bsz,k);
+k0 = ceil(size(X,1)^(1/3)); % set to default val of K for training distribution!
+p_train = prob_grid(normal(X),bsz,k0);
 im_train = probmap2im(p_train,bsz); 
 Results.Itrain = im_train;
 
@@ -72,18 +79,17 @@ VrKLR  = VLr{minInd}; % find best rotation!
 p_rot = prob_grid(normal(VrKLR),bsz,k);
 Results.Irot =  probmap2im(p_rot,bsz); 
 Results.Vrot  = VrKLR;
-
-%flipInd = mod(minInd-1+numA,2*numA)+1;
+Results.KLD = KLD;
 
 % find next peak in divergence (next best solution)
 [pks,KLid] = findpeaks(-KLD);
 [~,id] = sort(pks,'descend');
-flipInd = KLid(id(2));
 
-VrKLRf  = VLr{flipInd}; % flipped version
-Results.Vflip  = VrKLRf; 
-
-
+for i=1:numsol
+    flipInd(i) = KLid(id(i+1));
+    Results.Vflip{i}  = VLr{flipInd(i)}; % flipped version
+end
+    
 %% Step 2. Find best scaling (grid search)
 %%%% find best scaling 
 for p=1:numS

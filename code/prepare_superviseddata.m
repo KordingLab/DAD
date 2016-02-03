@@ -1,19 +1,35 @@
-function Data = prepare_superviseddata(delT,monkeytr,monkeyte,removelabel)
+function Data = prepare_superviseddata(delT,monkeytr,monkeyte,removelabel,percent_split)
 
 if nargin<4
     removelabel = [];
+    percent_split = 0.5;
 end
+
+if nargin<5
+    percent_split = 0.5;
+end
+    
 
 [Y1,X1,T1, N1] =  getdata(monkeytr,delT);
     
 if strcmp(monkeytr,monkeyte) % split dataset
     
-    percent_split = 0.5; 
-    numsplit1 = round(sum(diff(T1)~=0).*(percent_split));
+    %percent_split = 0.4;
     
-    id = find(diff(T1)~=0);
-    split1 = 1:id(numsplit1)-1;
-    split2 = id(numsplit1):length(T1);
+    Y1(:,find(sum(Y1)==0))=[];
+    szY = size(Y1,1);
+    
+    if percent_split>0
+    
+        numsplit1 = ceil(percent_split*szY);
+        permz = randperm(szY);
+        split1 = permz(1:numsplit1);
+        split2 = permz(numsplit1+1:end);
+    
+    else
+        split1 = 1:szY;
+        split2 = [];
+    end
    
     Xtr= X1(split1,:);
     Xte = X1(split2,:);
@@ -62,6 +78,8 @@ Data.Xtest = Xte(tindte,:);
 Data.Ytest = Yte(tindte,:);
 Data.Ttest = Tte(tindte,:);
 Data.Ntest = Nte(tindte,:);
+
+%Data.permutation = permz;
 
 end
 
