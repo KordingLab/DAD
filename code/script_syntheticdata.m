@@ -2,12 +2,13 @@
 C = setinputparams();
 Ts=.2;
 Data = preparedata_chewiemihi(Ts);
-Data2x = preparedata_chewiemihi(Ts/2);
+%Data2x = preparedata_chewiemihi(Ts/2);
 
 removedir = [0,2,7];
 [Xtest,Ytest,Ttest,Xtrain,~,Ttrain] = removedirdata(Data,removedir);
 XteN = normal(Xtest);
-[Xtest2x,Ytest2x,Ttest2x,Xtrain2x,~,Ttrain2x] = removedirdata(Data2x,removedir);
+
+%[Xtest2x,Ytest2x,Ttest2x,Xtrain2x,~,Ttrain2x] = removedirdata(Data2x,removedir);
 
 %% find embeddings for different num of neurons (N)
 bsz = 50; k = 5; 

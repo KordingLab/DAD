@@ -1,13 +1,20 @@
-function Results = runsynthexpt(Xtest,Ttest,Xtrain,avec,svec,k,N,method,Ysim)
+function Results = runsynthexpt(Xtest,Ttest,Xtrain,avec,svec,k,N,model,linkfn,Ysim)
+
 if nargin<8
-    method = 'base';
+    model = 'base'; % baseline only,  no modulation term
 end
 
 if nargin<9
-    Ysim = simmotorneurons(Xtest,N,method);
+    linkfn = 'exp'; % exponential link fn (poisson neurons)
 end
 
-[V, ~, ~] = ExpFamPCA(Ysim,2);
+if nargin<10
+    Ysim = simmotorneurons(Xtest,N,model,linkfn);
+end
+
+%[V, ~, ~] = ExpFamPCA(Ysim,2);
+[~, V, ~] = pca(Ysim);
+V = V(:,1:2);
 
 display = 0;
     

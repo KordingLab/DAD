@@ -1,6 +1,8 @@
-function [Wsup,trainset,testset] = supdecoder(X,Y,trsz)
+function [Wsup,trainset,testset] = supdecoder(X,Y,trsz,permz)
 
-permz = randperm(size(X,1));
+if nargin<4
+    permz = randperm(size(X,1));
+end
 
 trainset = permz(1:trsz);
 testset = permz(trsz+1:end);
