@@ -31,10 +31,10 @@ for outiter = 1:length(psamp)
     [~,~,~,XtrC,~,~,~,~] = removedirdata(Data0,removedir);
     [Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
 
-    R2 = zeros(5+numsol,numIter,outeriter);
+    R2 = zeros(5+numsol,numIter,length(psamp));
 %    R2C = zeros(6,numIter);
-    R2MC = zeros(5+numsol,numIter,outeriter);
-    minVal = zeros(numIter,outeriter);
+    R2MC = zeros(5+numsol,numIter,length(psamp));
+    minVal = zeros(numIter,length(psamp));
     
     %Results = cell(numIter,1);
     %ResultsC = cell(numIter,1);
@@ -104,8 +104,6 @@ for outiter = 1:length(psamp)
     end
     
     save(['Results-2-3-2016-psamp-', int2str(100*percent_samp)])
-    
-    outeriter,
     
 end % end outer iteration (diff vals of psamp)
 
