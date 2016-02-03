@@ -11,7 +11,7 @@ Ts=.20;
 psamp = 0.15;
 numsteps = 9;
 numsol = 5;
-Niter = 1;
+Niter = 50;
 
 for outiter = 1:length(psamp)
     
@@ -31,22 +31,21 @@ for outiter = 1:length(psamp)
     [~,~,~,XtrC,~,~,~,~] = removedirdata(Data0,removedir);
     [Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
 
-    R2 = zeros(5+numsol,numIter,outeriter);
+    R2 = zeros(6,numIter);
 %    R2C = zeros(6,numIter);
-    R2MC = zeros(5+numsol,numIter,outeriter);
-    minVal = zeros(numIter,outeriter);
+    R2MC = zeros(6,numIter);
+    minVal = zeros(1,numIter);
     
     %Results = cell(numIter,1);
     %ResultsC = cell(numIter,1);
     %ResultsMC = cell(numIter,1);
-    
-    for nn = 1:numIter % random train/test split
+    for nn = 1:numIter
 
             [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
             numte = size(Yte0,1);
             permzte = randperm(numte);
             
-            for mm = 1:numsteps % loop over amount of test data
+            for mm = 1:numsteps
                 
                 numtest = ceil(0.1*(mm+1)*numte);
                 Xte = Xte0(permzte(1:numtest),:);
@@ -88,7 +87,7 @@ for outiter = 1:length(psamp)
                 display(['Supervised decoder, R2 = ', num2str(r2sup,3)])    
                 display(['Least-squares Projection, R2 = ', num2str(r2ls,3)])
                 display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])
-            end
+        end
 
     
 %         if max(R2C(1:4,nn))<0.3
@@ -101,12 +100,9 @@ for outiter = 1:length(psamp)
 % 
 %         end
 
+
+
     end
-    
-    save(['Results-2-3-2016-psamp-', int2str(100*percent_samp)])
-    
-    outeriter,
-    
 end % end outer iteration (diff vals of psamp)
 
 %     s = zeros(6,7);
