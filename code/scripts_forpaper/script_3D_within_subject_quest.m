@@ -12,7 +12,7 @@ Ts=.20;
 percent_samp = 0.15;
 numsteps = 9;
 numsol = 5;
-Niter = 100;
+numIter = 100;
 M1{1} = 'FA'; 
       
 
