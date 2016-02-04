@@ -3,22 +3,26 @@
 %% (1) within subjects (iteration over different partitions of train/test sets)
 
 % set parameters
-% removedir = [0, 1, 2]; 
-removedir = [0, 2, 7];
+removedir = [0, 1, 2]; 
+%removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
 numsol = 5;
-numsteps = 8;
-foffset = 0.2;
-fstep = 0.1;
-% numsteps = 9;
-% foffset = 0.1;
-% fstep = 0.1;
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save):  ');
 numIter = input('Number of iterations?  ');
 percent_samp = input('Fraction of samples for training:  ');
+
+if percent_samp==0.15
+    numsteps = 8;
+    foffset = 0.2;
+    fstep = 0.1;
+elseif percent_samp==0.3
+    numsteps = 9;
+    foffset = 0.1;
+    fstep = 0.1;
+end
 
 %% prepare data
 
@@ -112,7 +116,7 @@ R2order{4} = 'Vflip';
 percent_test = 0.1+0.1*[1:numsteps];
 percent_train = percent_samp;
 
-save(['Results-2-3-2016-psamp-', int2str(100*percent_samp),'-', addname],...
+save(['Results-2-4-2016-remove012-psamp-', int2str(100*percent_samp),'-', addname],...
     'R2','R2MC','M1','R2order','percent_train','percent_test',...
     'removedir','numsol')
 
