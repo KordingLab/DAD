@@ -29,7 +29,10 @@ R2MC = cell(numIter,1);
 minVal = cell(numIter,1);
 
 % setup pool
-parpool(8)
+p = gcp;
+if isempty(p)
+   parpool(8)
+end
 
 parfor nn = 1:numIter % random train/test split
 
