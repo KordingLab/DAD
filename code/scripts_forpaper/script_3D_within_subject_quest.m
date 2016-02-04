@@ -85,13 +85,18 @@ parfor nn = 1:numIter % random train/test split
             display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])
         end
         
-        tmp = [R2X,R2sup,R2ls];
+        tmp = [R2X;R2sup;R2ls];
         R2{nn} = tmp;
         
-        tmp = [R2XMC,R2supMC,R2lsMC];
+        tmp = [R2XMC;R2supMC;R2lsMC];
         R2MC{nn} = tmp;
 
 end
+
+R2order{1} = 'Xfinal';
+R2order{2} = 'Xicp';
+R2order{3} = 'Vfa';
+R2order{4} = 'Vlocalmin';
 
 save(['Results-2-3-2016-psamp-', int2str(100*percent_samp),'-', addname'])
 

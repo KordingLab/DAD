@@ -10,9 +10,9 @@ removedir = [0, 2, 7];  %%%% 0.5 with few fails
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
-numsteps = 9;
+numsteps = 1;
 numsol = 5;
-Niter = 100;
+numiter = 100;
 
 Data0 = prepare_superviseddata(Ts,'chewie1','mihi',[]);
 Data = prepare_superviseddata(Ts,'mihi','mihi',[],0);
@@ -83,10 +83,10 @@ for nn = 1:numIter % random train/test split
             display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])
         end
         
-        tmp = [R2X,R2sup,R2ls];
+        tmp = [R2X;R2sup;R2ls];
         R2{nn} = tmp;
         
-        tmp = [R2XMC,R2supMC,R2lsMC];
+        tmp = [R2XMC;R2supMC;R2lsMC];
         R2MC{nn} = tmp;
 
 end
