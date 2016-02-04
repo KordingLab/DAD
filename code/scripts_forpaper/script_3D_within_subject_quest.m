@@ -7,13 +7,13 @@
 removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
-percent_samp = 0.15;
 numsteps = 9;
 numsol = 5;
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save):  ');
 numIter = input('Number of iterations?  ');
+percent_samp = input('Fraction of samples for training:  ');
 
 %% prepare data
 
@@ -84,8 +84,7 @@ parfor nn = 1:numIter % random train/test split
 
             display(['Supervised decoder, R2 = ', num2str(r2sup,3)])    
             display(['Least-squares Projection, R2 = ', num2str(r2ls,3)])
-            display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])
-            display('***~~~~~~++++~+~+~+~+~++~+~+~***')  
+            display(['Num test = ', int2str(numtest)])
 
         end
         
@@ -94,6 +93,8 @@ parfor nn = 1:numIter % random train/test split
         
         R2tot = [R2XMC;R2supMC;R2lsMC];
         R2MC{nn} = R2tot;
+        
+        display(['***~~~~~~++++~+  Iteration ', int2str(nn),'  +~+~+~++~+~+~***'])  
                
 end
 
