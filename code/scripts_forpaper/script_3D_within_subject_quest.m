@@ -8,12 +8,12 @@ removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
-numsteps = 1;
+numsteps = 9;
 numsol = 5;
-numIter = 1;
 M1{1} = 'FA'; 
 
-addname = input('Enter name for end of mat file (to save)');
+addname = input('Enter name for end of mat file (to save):  ');
+numIter = input('Number of iterations?  ');
 
 %% prepare data
 
