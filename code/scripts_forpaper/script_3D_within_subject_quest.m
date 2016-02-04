@@ -93,7 +93,7 @@ parfor nn = 1:numIter % random train/test split
         R2{nn} = R2tot;
         
         R2tot = [R2XMC;R2supMC;R2lsMC];
-        R2MC{nn} = tmp;
+        R2MC{nn} = R2tot;
                
 end
 
