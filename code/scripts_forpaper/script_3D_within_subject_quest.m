@@ -30,7 +30,7 @@ R2MC = cell(numIter,1);
 % start parallel pool
 p = gcp;
 if isempty(p)
-    parpool(2)
+    parpool(8)
 end
      
 parfor nn = 1:numIter % random train/test split
