@@ -49,7 +49,7 @@ parfor nn = 1:numIter % random train/test split
         
         for mm = 1:numsteps % loop over amount of test data
 
-            numtest = ceil((0.1 + 0.1*mm)*numte);
+            numtest = ceil(0.1 + 0.1*mm*numte);
             Xte = Xte0(permzte(1:numtest),:);
             Yte = Yte0(permzte(1:numtest),:);
             Tte = Tte0(permzte(1:numtest),:);

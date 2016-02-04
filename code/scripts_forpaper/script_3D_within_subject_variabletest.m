@@ -1,40 +1,45 @@
-% script 3D alignment
-% test synthetic + real data with same methods
+% script 3D alignment (run DAD on real datasets)
 
 %% (1) within subjects (iteration over different partitions of train/test sets)
 
-% removedir = [0, 2, 7]; 
-
-addname = input('Enter name for end of mat file (to save)');
-removedir = [0, 2, 7];  %%%% 0.5 with few fails
+% set parameters
+% removedir = [0, 1, 2]; 
+removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
 numsteps = 1;
 numsol = 5;
-numiter = 100;
+numIter = 1;
+M1{1} = 'FA'; 
+
+addname = input('Enter name for end of mat file (to save)');
+
+%% prepare data
 
 Data0 = prepare_superviseddata(Ts,'chewie1','mihi',[]);
 Data = prepare_superviseddata(Ts,'mihi','mihi',[],0);
 [~,~,~,XtrC,~,~,~,~] = removedirdata(Data0,removedir);
 [Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
-
 clear Data Data0
 
+% initialize variables
 R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
-minVal = cell(numIter,1);
 
-%parpool(8)
-
+% start parallel pool
+%p = gcp;
+%if isempty(p)
+%    parpool(2)
+%end
+     
+%parfor nn = 1:numIter % random train/test split
 for nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
         numte = size(Yte0,1);
         permzte = randperm(numte);
-        
-        M1{1} = 'FA'; 
-        
+           
         R2X = zeros(3+numsol,numsteps);
         R2sup = zeros(1,numsteps);
         R2ls = zeros(1,numsteps);
@@ -45,7 +50,7 @@ for nn = 1:numIter % random train/test split
         
         for mm = 1:numsteps % loop over amount of test data
 
-            numtest = ceil(0.1*(mm+1)*numte);
+            numtest = ceil((0.1 + 0.1*mm)*numte);
             Xte = Xte0(permzte(1:numtest),:);
             Yte = Yte0(permzte(1:numtest),:);
             Tte = Tte0(permzte(1:numtest),:);
@@ -81,18 +86,30 @@ for nn = 1:numIter % random train/test split
             display(['Supervised decoder, R2 = ', num2str(r2sup,3)])    
             display(['Least-squares Projection, R2 = ', num2str(r2ls,3)])
             display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])
+            display('***~~~~~~++++~+~+~+~+~++~+~+~***')  
+
         end
         
-        tmp = [R2X;R2sup;R2ls];
-        R2{nn} = tmp;
+        R2tot = [R2X;R2sup;R2ls];
+        R2{nn} = R2tot;
         
-        tmp = [R2XMC;R2supMC;R2lsMC];
+        R2tot = [R2XMC;R2supMC;R2lsMC];
         R2MC{nn} = tmp;
-
+               
 end
 
-save(['Results-2-3-2016-psamp-', int2str(100*percent_samp),'-', addname'])
+R2order{1} = 'Xfinal';
+R2order{2} = 'Xicp';
+R2order{3} = 'Vfa';
+R2order{4} = 'Vflip';
 
+% save these variables
+percent_test = 0.1+0.1*[1:numsteps];
+percent_train = percent_samp;
+
+save(['Results-2-3-2016-psamp-', int2str(100*percent_samp),'-', addname],...
+    'R2','R2MC','Methods','R2order','percent_train','percent_test',...
+    'removedir','numsol')
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
