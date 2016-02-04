@@ -13,28 +13,30 @@ percent_samp = 0.15;
 numsteps = 9;
 numsol = 5;
 Niter = 100;
+M1{1} = 'FA'; 
+      
 
+%%% prepare data
 Data0 = prepare_superviseddata(Ts,'chewie1','mihi',[]);
 Data = prepare_superviseddata(Ts,'mihi','mihi',[],0);
 [~,~,~,XtrC,~,~,~,~] = removedirdata(Data0,removedir);
 [Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
-
 clear Data Data0
 
+% initalize variables
 R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
 minVal = cell(numIter,1);
 
-%parpool(8)
+% setup pool
+parpool(8)
 
-for nn = 1:numIter % random train/test split
+parfor nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
         numte = size(Yte0,1);
         permzte = randperm(numte);
-        
-        M1{1} = 'FA'; 
-        
+          
         R2X = zeros(3+numsol,numsteps);
         R2sup = zeros(1,numsteps);
         R2ls = zeros(1,numsteps);
