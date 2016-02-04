@@ -7,8 +7,13 @@
 removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
-numsteps = 9;
 numsol = 5;
+numsteps = 8;
+foffset = 0.2;
+fstep = 0.1;
+% numsteps = 9;
+% foffset = 0.1;
+% fstep = 0.1;
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save):  ');
@@ -49,7 +54,7 @@ parfor nn = 1:numIter % random train/test split
         
         for mm = 1:numsteps % loop over amount of test data
 
-            numtest = ceil((0.1 + 0.1*mm)*numte);
+            numtest = ceil((foffset + fstep*mm)*numte);
             Xte = Xte0(permzte(1:numtest),:);
             Yte = Yte0(permzte(1:numtest),:);
             Tte = Tte0(permzte(1:numtest),:);
