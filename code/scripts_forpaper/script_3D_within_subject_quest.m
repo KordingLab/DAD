@@ -15,12 +15,12 @@ numIter = input('Number of iterations?  ');
 percent_samp = input('Fraction of samples for training:  ');
 
 if percent_samp==0.15
-    numsteps = 8;
-    foffset = 0.2;
-    fstep = 0.1;
-elseif percent_samp==0.3
     numsteps = 9;
     foffset = 0.1;
+    fstep = 0.1;
+elseif percent_samp==0.3
+    numsteps = 8;
+    foffset = 0.2;
     fstep = 0.1;
 end
 
@@ -113,7 +113,8 @@ R2order{3} = 'Vfa';
 R2order{4} = 'Vflip';
 
 % save these variables
-percent_test = 0.1+0.1*[1:numsteps];
+
+percent_test = foffset+ fstep*[1:numsteps];
 percent_train = percent_samp;
 
 save(['Results-2-4-2016-remove012-psamp-', int2str(100*percent_samp),'-', addname],...

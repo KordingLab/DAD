@@ -52,7 +52,10 @@ for i = 1:numA
             R2Vicp(i,j,jj) = evalR2(Res.Vicp(:,1:2),Xgt); 
             minVal(i,j,jj) = Res.minVal;
             tmpr2 = R2Vf(:,i,j,jj);
-            R2max = max([R2X(i,j,jj), tmpr2(:)', R2V(i,j,jj), R2Vicp(i,j,jj)]);
+            [maxID,R2max] = max([R2X(i,j,jj), tmpr2(:)', R2V(i,j,jj), R2Vicp(i,j,jj)]);
+            
+%             if maxID
+%                 Res.Xmax = 
             
             if nargout>2
                 Results{i,j,jj} = Res;
