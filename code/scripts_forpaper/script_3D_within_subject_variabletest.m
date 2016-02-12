@@ -14,6 +14,17 @@ M1{1} = 'FA';
 
 addname = input('Enter name for end of mat file (to save)');
 
+if percent_samp==0.15
+    numsteps = 9;
+    foffset = 0.1;
+    fstep = 0.1;
+elseif percent_samp==0.3
+    numsteps = 8;
+    foffset = 0.2;
+    fstep = 0.1;
+end
+
+
 %% prepare data
 
 Data0 = prepare_superviseddata(Ts,'chewie1','mihi',[]);
@@ -40,9 +51,9 @@ parfor nn = 1:numIter % random train/test split
         permzte = randperm(numte);
            
         R2X = zeros(3+numsol,numsteps);
-        R2sup = zeros(1,numsteps);
-        R2ls = zeros(1,numsteps);
-        R2Ave = zeros(1,numsteps);
+        R2sup = zeros(1,numIter);
+        R2ls = zeros(1,numIter);
+        R2Ave = zeros(1,numIter);
         
         R2XMC = zeros(3+numsol,numsteps);
         R2supMC = zeros(1,numsteps);
