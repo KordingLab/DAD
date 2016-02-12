@@ -9,6 +9,8 @@ if id==1
     Xave = 0.5*(Xsup + Res.Xrec);
 elseif id == 2
     Xave = 0.5*(Xsup + Res.Vicp(:,1:2));
+elseif id == 3
+    Xave = 0.5*(Xsup + Res.Vicp(:,1:2));
 elseif id > 3
     Xave = wt*(Xsup + Res.Vflip{id-3});
 end
