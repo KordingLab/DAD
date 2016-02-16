@@ -38,12 +38,12 @@ R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
 
 % start parallel pool
-% p = gcp;
-% if isempty(p)
-%    parpool(2)
-% end
+p = gcp;
+if isempty(p)
+   parpool(8)
+end
      
-for nn = 1:numIter % random train/test split
+parfor nn = 1:numIter % random train/test split
 %for nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
