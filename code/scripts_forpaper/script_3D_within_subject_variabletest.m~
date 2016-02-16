@@ -8,12 +8,22 @@ removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
-numsteps = 1;
 numsol = 5;
-numIter = 1;
+numIter = 50;
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save)');
+
+if percent_samp==0.15
+    numsteps = 9;
+    foffset = 0.1;
+    fstep = 0.1;
+elseif percent_samp==0.3
+    numsteps = 8;
+    foffset = 0.2;
+    fstep = 0.1;
+end
+
 
 %% prepare data
 
@@ -28,13 +38,13 @@ R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
 
 % start parallel pool
-%p = gcp;
-%if isempty(p)
+% p = gcp;
+% if isempty(p)
 %    parpool(2)
-%end
+% end
      
-%parfor nn = 1:numIter % random train/test split
 for nn = 1:numIter % random train/test split
+%for nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
         numte = size(Yte0,1);
@@ -43,14 +53,16 @@ for nn = 1:numIter % random train/test split
         R2X = zeros(3+numsol,numsteps);
         R2sup = zeros(1,numsteps);
         R2ls = zeros(1,numsteps);
+        R2Ave = zeros(1,numsteps);
         
         R2XMC = zeros(3+numsol,numsteps);
         R2supMC = zeros(1,numsteps);
         R2lsMC = zeros(1,numsteps);
+        R2AveMC = zeros(1,numsteps);
         
         for mm = 1:numsteps % loop over amount of test data
-
-            numtest = ceil((0.1 + 0.1*mm)*numte);
+            
+            numtest = ceil((foffset + fstep*mm)*numte);
             Xte = Xte0(permzte(1:numtest),:);
             Yte = Yte0(permzte(1:numtest),:);
             Tte = Tte0(permzte(1:numtest),:);
@@ -73,23 +85,23 @@ for nn = 1:numIter % random train/test split
 
             X3D = mapX3D(Xtr); % split (training set + extra chewie training for DAD)
             [Rtmp, Res] = run3Ddad(X3D,Vr,Xte,A,Methods,numsol);
+            
+            Xave = averageDADSup(Res,Xsup);
+            r2ave = evalR2(Xte,Xave); 
+            
+            R2Ave(mm) = r2ave;
             R2X(:,mm) = Rtmp;
             R2sup(mm) = r2sup; 
             R2ls(mm) = r2ls;
             
+            
             X3D = mapX3D([Xtr; XtrC]); % split (training set + extra chewie training for DAD)
             [Rtmp, ResMC] = run3Ddad(X3D,Vr,Xte,A,Methods,numsol);
+           
+            Xave = averageDADSup(ResMC,Xsup);
+            r2ave = evalR2(Xte,Xave); 
             
-            [~,id] = max(ResMC.R2);
-            if id==1
-                Xave = 0.5*(Xsup + ResMC.Xrec);
-            elseif id == 2
-                Xave = 0.5*(Xsup + ResMC.Vicp);
-            elseif id > 3
-                Xave = 0.5*(Xsup + ResMC.Vflip{id-3});
-            end
-
-            
+            R2AveMC(mm) = r2ave;
             R2XMC(:,mm) = Rtmp;
             R2supMC(mm) = r2sup; 
             R2lsMC(mm) = r2ls;
@@ -101,24 +113,32 @@ for nn = 1:numIter % random train/test split
 
         end
         
-        R2tot = [R2X;R2sup;R2ls];
+        R2tot = [R2X;R2sup;R2ls; R2Ave];
         R2{nn} = R2tot;
         
-        R2tot = [R2XMC;R2supMC;R2lsMC];
-        R2MC{nn} = tmp;
+        R2tot = [R2XMC;R2supMC;R2lsMC; R2AveMC];
+        R2MC{nn} = R2tot;
                
 end
 
 R2order{1} = 'Xfinal';
 R2order{2} = 'Xicp';
 R2order{3} = 'Vfa';
-R2order{4} = 'Vflip';
+R2order{4} = 'Xflip1';
+R2order{5} = 'Xflip2';
+R2order{6} = 'Xflip3';
+R2order{7} = 'Xflip4';
+R2order{8} = 'Xflip5';
+R2order{9} = 'Xflip';
+R2order{10} = 'Xsup';
+R2order{9} = 'Vflip';
+
 
 % save these variables
-percent_test = 0.1+0.1*[1:numsteps];
+percent_test = foffset + fstep*[1:numsteps];
 percent_train = percent_samp;
 
-save(['Results-2-3-2016-psamp-', int2str(100*percent_samp),'-', addname],...
+save(['Results-2-12-2016-psamp-', int2str(100*percent_samp),'-', addname],...
     'R2','R2MC','Methods','R2order','percent_train','percent_test',...
     'removedir','numsol')
 

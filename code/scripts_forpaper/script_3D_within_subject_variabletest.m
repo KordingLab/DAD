@@ -9,7 +9,7 @@ A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
 numsol = 5;
-numIter = 50;
+numIter = 2;
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save)');
@@ -38,12 +38,12 @@ R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
 
 % start parallel pool
-p = gcp;
-if isempty(p)
-   parpool(2)
-end
+% p = gcp;
+% if isempty(p)
+%    parpool(2)
+% end
      
-parfor nn = 1:numIter % random train/test split
+for nn = 1:numIter % random train/test split
 %for nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
@@ -51,9 +51,9 @@ parfor nn = 1:numIter % random train/test split
         permzte = randperm(numte);
            
         R2X = zeros(3+numsol,numsteps);
-        R2sup = zeros(1,numIter);
-        R2ls = zeros(1,numIter);
-        R2Ave = zeros(1,numIter);
+        R2sup = zeros(1,numsteps);
+        R2ls = zeros(1,numsteps);
+        R2Ave = zeros(1,numsteps);
         
         R2XMC = zeros(3+numsol,numsteps);
         R2supMC = zeros(1,numsteps);
@@ -61,8 +61,8 @@ parfor nn = 1:numIter % random train/test split
         R2AveMC = zeros(1,numsteps);
         
         for mm = 1:numsteps % loop over amount of test data
-
-            numtest = ceil((0.1 + 0.1*mm)*numte);
+            
+            numtest = ceil((foffset + fstep*mm)*numte);
             Xte = Xte0(permzte(1:numtest),:);
             Yte = Yte0(permzte(1:numtest),:);
             Tte = Tte0(permzte(1:numtest),:);
@@ -113,10 +113,10 @@ parfor nn = 1:numIter % random train/test split
 
         end
         
-        R2tot = [R2X;R2sup;R2ls; R2Ave];
+        R2tot = [R2X;  R2Ave; R2sup; R2ls];
         R2{nn} = R2tot;
         
-        R2tot = [R2XMC;R2supMC;R2lsMC; R2AveMC];
+        R2tot = [R2XMC; R2AveMC; R2supMC; R2lsMC];
         R2MC{nn} = R2tot;
                
 end
@@ -124,13 +124,20 @@ end
 R2order{1} = 'Xfinal';
 R2order{2} = 'Xicp';
 R2order{3} = 'Vfa';
-R2order{4} = 'Vflip';
+R2order{4} = 'Xflip1';
+R2order{5} = 'Xflip2';
+R2order{6} = 'Xflip3';
+R2order{7} = 'Xflip4';
+R2order{8} = 'Xflip5';
+R2order{9} = 'Xave';
+R2order{10} = 'Xsup';
+R2order{11} = 'Xls';
 
 % save these variables
-percent_test = 0.1+0.1*[1:numsteps];
+percent_test = foffset + fstep*[1:numsteps];
 percent_train = percent_samp;
 
-save(['Results-2-12-2016-psamp-', int2str(100*percent_samp),'-', addname],...
+save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-', addname],...
     'R2','R2MC','Methods','R2order','percent_train','percent_test',...
     'removedir','numsol')
 
