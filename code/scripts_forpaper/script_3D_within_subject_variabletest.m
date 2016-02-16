@@ -5,8 +5,16 @@
 % set parameters
 % removedir = [0, 1, 2]; 
 
-rng(22)
-removedir = [0, 2, 7];
+randseed = randi(100,1);
+rng(randseed)
+
+whichdirs = input('Which pattern ? Enter 1 if (012) and 2 if (027): ');
+if whichdirs==1
+    removedir = [0, 1, 2];
+else
+    removedir = [0, 2, 7];
+end
+
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
@@ -141,7 +149,7 @@ percent_train = percent_samp;
 
 save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-numIter-',...
     int2str(numIter), addname],'R2','R2MC','Methods','R2order',...
-    'percent_train','percent_test','removedir','numsol')
+    'percent_train','percent_test','removedir','numsol','randseed')
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%

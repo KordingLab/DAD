@@ -4,15 +4,19 @@
 
 % set parameters
 % removedir = [0, 1, 2]; 
+
+rng(22)
+
+input('Which pattern ? Type 1 if (012) and 2 ')
 removedir = [0, 2, 7];
 A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
 numsol = 5;
-numIter = 50;
+numIter = input('Number of iterations? ');
 M1{1} = 'FA'; 
 
-addname = input('Enter name for end of mat file (to save)');
+addname = input('Enter string to append to end of file name: ');
 
 if percent_samp==0.15
     numsteps = 9;
@@ -38,12 +42,12 @@ R2 = cell(numIter,1);
 R2MC = cell(numIter,1);
 
 % start parallel pool
-% p = gcp;
-% if isempty(p)
-%    parpool(2)
-% end
+p = gcp;
+if isempty(p)
+   parpool(8)
+end
      
-for nn = 1:numIter % random train/test split
+parfor nn = 1:numIter % random train/test split
 %for nn = 1:numIter % random train/test split
 
         [Xtr,Ytr,Ttr,Xte0,Yte0,Tte0,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
@@ -113,10 +117,10 @@ for nn = 1:numIter % random train/test split
 
         end
         
-        R2tot = [R2X;R2sup;R2ls; R2Ave];
+        R2tot = [R2X;  R2Ave; R2sup; R2ls];
         R2{nn} = R2tot;
         
-        R2tot = [R2XMC;R2supMC;R2lsMC; R2AveMC];
+        R2tot = [R2XMC; R2AveMC; R2supMC; R2lsMC];
         R2MC{nn} = R2tot;
                
 end
@@ -129,18 +133,17 @@ R2order{5} = 'Xflip2';
 R2order{6} = 'Xflip3';
 R2order{7} = 'Xflip4';
 R2order{8} = 'Xflip5';
-R2order{9} = 'Xflip';
+R2order{9} = 'Xave';
 R2order{10} = 'Xsup';
-R2order{9} = 'Vflip';
-
+R2order{11} = 'Xls';
 
 % save these variables
 percent_test = foffset + fstep*[1:numsteps];
 percent_train = percent_samp;
 
-save(['Results-2-12-2016-psamp-', int2str(100*percent_samp),'-', addname],...
-    'R2','R2MC','Methods','R2order','percent_train','percent_test',...
-    'removedir','numsol')
+save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-numIter-',...
+    int2str(numIter), addname],'R2','R2MC','Methods','R2order',...
+    'percent_train','percent_test','removedir','numsol')
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
