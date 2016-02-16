@@ -9,7 +9,7 @@ A = 180; %every 2 deg
 Ts=.20; 
 percent_samp = 0.15;
 numsol = 5;
-numIter = 2;
+numIter = input('Number of iterations? ');
 M1{1} = 'FA'; 
 
 addname = input('Enter name for end of mat file (to save)');
@@ -137,9 +137,9 @@ R2order{11} = 'Xls';
 percent_test = foffset + fstep*[1:numsteps];
 percent_train = percent_samp;
 
-save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-', addname],...
-    'R2','R2MC','Methods','R2order','percent_train','percent_test',...
-    'removedir','numsol')
+save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-numIter-',...
+    int2str(numIter), addname],'R2','R2MC','Methods','R2order',...
+    'percent_train','percent_test','removedir','numsol')
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
