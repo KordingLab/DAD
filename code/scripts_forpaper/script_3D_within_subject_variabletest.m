@@ -17,7 +17,9 @@ end
 
 A = 180; %every 2 deg
 Ts=.20; 
+
 percent_samp = 0.15;
+
 numsol = 5;
 numIter = input('Number of iterations? ');
 M1{1} = 'FA'; 
@@ -147,8 +149,11 @@ R2order{11} = 'Xls';
 percent_test = foffset + fstep*[1:numsteps];
 percent_train = percent_samp;
 
+removestr = ['-removedir-',int2str(removedir(1)),...
+                int2str(removedir(2)),int2str(removedir(3))];
+
 save(['Results-',date,'-psamp-', int2str(100*percent_samp),'-numIter-',...
-    int2str(numIter), addname],'R2','R2MC','R2order',...
+    int2str(numIter), removestr,'-', addname],'R2','R2MC','R2order',...
     'percent_train','percent_test','removedir','numsol','randseed')
 
 %%%%%%%%%%%%%%%%%%%%%
