@@ -96,14 +96,14 @@ for nn = 1:numIter % random train/test split
             Nsamp(mm) = Ns;
             
             %%% now for augmented training
-%             ResMC = runDAD(Yte,[Xtr; XtrC],gridsz,Tte,Xte);
-%             Xave = normal((Res.Xrec+Xsup)/2);
-%             r2ave = evalR2(Xte,Xave); 
-%             
-%             R2AveMC(mm) = r2ave;
-%             R2XMC(mm) = ResMC.R2;
-%             R2supMC(mm) = r2sup; 
-%             R2lsMC(mm) = r2ls;
+            ResMC = runDAD(Yte,[Xtr; XtrC],gridsz,Tte,Xte);
+            Xave = normal((Res.Xrec+Xsup)/2);
+            r2ave = evalR2(Xte,Xave); 
+            
+            R2AveMC(mm) = r2ave;
+            R2XMC(mm) = ResMC.R2;
+            R2supMC(mm) = r2sup; 
+            R2lsMC(mm) = r2ls;
 
             display(['DAD, R2 = ', num2str(Res.R2,3)])    
             display(['DAD (MC), R2 = ', num2str(ResMC.R2,3)])    
