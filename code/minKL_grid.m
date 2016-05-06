@@ -2,7 +2,7 @@ function Results = minKL_grid(V,X,angVals,sVals,method,k,numsol)
 % minimize KL (rotation + scaling) over a normalized grid
 % input = Y >> test dataset
 % input = X >> kinematics data (target distribution)
-% input = numA >> number of angles to sweep over
+% input = angVals >> number of angles to sweep over (can be a vector)
 
 %% Step 0. Set things up
 
@@ -45,7 +45,8 @@ V = normal(V-repmat(mnV,size(V,1),1)); Results.V = V;
 
 % compute heat map for training data
 k0 = ceil(size(X,1)^(1/3)); % set to default val of K for training distribution!
-p_train = prob_grid(normal(X),bsz,k0);
+p_train = prob_grid(X,bsz,k0);
+%p_train = prob_grid(normal(X),bsz,k0);
 im_train = probmap2im(p_train,bsz); 
 Results.Itrain = im_train;
 
@@ -82,12 +83,15 @@ Results.Vrot  = VrKLR;
 Results.KLD = KLD;
 
 % find next peak in divergence (next best solution)
-[pks,KLid] = findpeaks(-KLD);
-[~,id] = sort(pks,'descend');
-
-for i=1:numsol
-    flipInd(i) = KLid(id(i+1));
-    Results.Vflip{i}  = VLr{flipInd(i)}; % flipped version
+if numsol>0
+    [pks,KLid] = findpeaks(-KLD);
+    [~,id] = sort(pks,'descend');
+    for i=1:numsol
+        flipInd(i) = KLid(id(i+1));
+        Results.Vflip{i}  = VLr{flipInd(i)}; % flipped version
+    end
+else
+    Results.Vflip = 0;
 end
     
 %% Step 2. Find best scaling (grid search)

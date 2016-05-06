@@ -1,4 +1,4 @@
-function Results = minKL_grid3D(V,X,gridsz)
+function [Vout,resid] = minKL_grid3D(V,X,gridsz)
 % minimize KL (rotation + scaling) over a normalized grid
 % input = V >> test dataset
 % input = X >> kinematics data (target distribution)
@@ -23,8 +23,16 @@ Xn = normal(X2);
 
 [Vout,resid] = conefit3(Xn,Vn,gridsz); % random restarts for cone angle
    
-Results = minKL_grid(Vout(:,1:2),Xn(:,1:2),linspace(0,360,180),linspace(0.8,1.2,10),'KL',5,5);
-Results.resid = resid;
+
+Result = minKL_grid(Vout(:,1:2),Xn(:,1:2),linspace(0,360,180),linspace(0.8,1.2,10),'KL',5,5);
+Xnew = Results.Xrec;
+
+
+% minKLgrid in 2D
+%Results = minKL_grid(Vout(:,1:2),Xn(:,1:2),angVals,sVals,method,k,numsol);
+%Results.Vicp = Vout;
+%Results.V = Vn;
+%Results.nmdiff = nmdiff;
 
 
 end % end main function

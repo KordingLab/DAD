@@ -13,7 +13,8 @@ if isempty(k)
     k=round(dsz^0.3);
 end
 
-XN=normal(X);
+%XN=normal(X);
+XN = X;
 
 xmax= max(XN(:,1))+wsz;
 xmin= min(XN(:,1))-wsz;

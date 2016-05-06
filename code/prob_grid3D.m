@@ -19,6 +19,8 @@ xmax= max(XN(:,1))+wsz;
 xmin= min(XN(:,1))-wsz;
 ymax= max(XN(:,2))+wsz;
 ymin= min(XN(:,2))-wsz;
+zmax= max(XN(:,3))+wsz;
+zmin= min(XN(:,3))-wsz;
 
 if xmax>ymax
     ymax = xmax;
@@ -37,7 +39,7 @@ end
 %ymax = 4+wsz;
 %ymin = -4-wsz;
 
-gridsz = [(xmax-xmin)./(bsz-1),(ymax-ymin)./(bsz-1)];
+gridsz = [(xmax-xmin)./(bsz-1),(ymax-ymin)./(bsz-1),(zmax-zmin)./(bsz-1)];
 
 %XN(:,1)= (XN(:,1)-xmin)/(xmax-xmin);
 %XN(:,2)= (XN(:,2)-ymin)/(ymax-ymin);
@@ -54,9 +56,9 @@ end
 % %xt=[colsc,rowsc];
 % xt=[rowsc,colsc];
 
-[x1,y1] = meshgrid(ymin:(ymax-ymin)/(bsz-1):ymax,...
-                   xmin:(xmax-xmin)/(bsz-1):xmax);
-xt = [x1(:),y1(:)];               
+[x1,y1,z1] = meshgrid(ymin:(ymax-ymin)/(bsz-1):ymax,...
+                   xmin:(xmax-xmin)/(bsz-1):xmax,zmin:(zmax-zmin)/(bsz-1):zmax);
+xt = [x1(:),y1(:),z1(:)];               
 
 p1=prob1(xt , XN , k );
 

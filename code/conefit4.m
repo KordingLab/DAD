@@ -1,10 +1,10 @@
-function [Xout,res1,an0] = conefit2(X,V,maxIter)
+function [Xout,res1,an0] = conefit4(X,V,maxIter)
+
 % target (X) and source (V) data
 Xn = normal(X); % target
-%Xn= X;
 
-[~, ~, Vr,~] = icp(Xn',V'); % align source to target
-Vcurr = Vr'; % align point clouds first
+[~, ~, Vout,~] = icp(Xn',V'); % align source to target
+Vcurr = Vout'; % align point clouds first
 
 nmtol = 1e-4;
 
