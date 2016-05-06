@@ -18,7 +18,7 @@ numA = 180; %every 2 deg
 Ts=.20; 
 
 percent_samp = 0.15;
-gridsz = 7;
+gridsz = 4;
 
 numsol = 5;
 numIter = input('Number of iterations? ');
@@ -27,16 +27,17 @@ M1{1} = 'FA';
 addname = input('Enter string to append to end of file name: ');
 
 if percent_samp==0.15
-    numsteps = 9;
+    numsteps = 5;
     foffset = 0.2;
     fstep = 0.1;
 elseif percent_samp==0.3
-    numsteps = 9;
+    numsteps = 5;
     foffset = 0.2;
     fstep = 0.1;
 end
 
-percent_test = linspace(foffset,foffset+numsteps*fstep,numsteps+1);
+%percent_test = linspace(foffset,foffset+numsteps*fstep,numsteps+1);
+percent_test = linspace(foffset,1,numsteps);
 
 %% prepare data
 
@@ -84,7 +85,7 @@ for nn = 1:numIter % random train/test split
             warning off, Wls = (Yte\Xte); r2ls = evalR2(Xte,Yte*Wls); 
 
             %% run DAD (3D to 2D)
-            Res = runDAD(Yte,Xtr,4,Tte,Xte);
+            Res = runDAD(Yte,Xtr,gridsz,Tte,Xte);
             Xave = normal((Res.Xrec+Xsup)/2);
             r2ave = evalR2(Xte,Xave); 
             
@@ -95,15 +96,18 @@ for nn = 1:numIter % random train/test split
             Nsamp(mm) = Ns;
             
             %%% now for augmented training
-            ResMC = runDAD(Yte,[Xtr; XtrC],gridsz,Tte,Xte);
-            Xave = normal((Res.Xrec+Xsup)/2);
-            r2ave = evalR2(Xte,Xave); 
-            
-            R2AveMC(mm) = r2ave;
-            R2XMC(mm) = ResMC.R2;
-            R2supMC(mm) = r2sup; 
-            R2lsMC(mm) = r2ls;
+%             ResMC = runDAD(Yte,[Xtr; XtrC],gridsz,Tte,Xte);
+%             Xave = normal((Res.Xrec+Xsup)/2);
+%             r2ave = evalR2(Xte,Xave); 
+%             
+%             R2AveMC(mm) = r2ave;
+%             R2XMC(mm) = ResMC.R2;
+%             R2supMC(mm) = r2sup; 
+%             R2lsMC(mm) = r2ls;
 
+            display(['DAD, R2 = ', num2str(Res.R2,3)])    
+            display(['DAD (MC), R2 = ', num2str(ResMC.R2,3)])    
+            display(['Average DAD + Supervised, R2 = ', num2str(r2ave,3)])    
             display(['Supervised decoder, R2 = ', num2str(r2sup,3)])    
             display(['Least-squares Projection, R2 = ', num2str(r2ls,3)])
             display(['Num test = ', int2str(numtest), ' Iter # ', int2str(nn)])

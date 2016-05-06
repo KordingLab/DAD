@@ -2,6 +2,9 @@
 
 %% (1) within subjects (iteration over different partitions of train/test sets)
 
+% set parameters
+% removedir = [0, 1, 2]; 
+
 randseed = randi(100,1);
 rng(randseed)
 
@@ -14,7 +17,7 @@ else
     Ntot = 1069;
 end
 
-numA = 180; %every 2 deg
+A = 180; %every 2 deg
 Ts=.20; 
 
 percent_samp = 0.15;
@@ -91,16 +94,14 @@ for nn = 1:numIter % random train/test split
             % throw away neurons that dont fire
             id2 = find(sum(Yte)<20); 
             Yr = Yte; Tr = Tte;
-            Yr(:,id2)=[]; Tr(id2)=[];
+            Yr(:,id2)=[]; Tr(:,id2)=[];
 
             % dimensionality reduction
             X3D = mapX3D(Xtr); % split (training set + extra chewie training for DAD)
             
             [Vr,Methods] = computeV(Yr,3,M1);
-
             
-            %%%%%% RUN DAD and compute R2s
-            [Rtmp, Res] = run3Ddad(X3D,Vr,Xte,numA,Methods,5,8);
+            [Rtmp, Res] = run3Ddad(X3D,Vr,Xte,A,Methods,numsol);
             
             Xave = averageDADSup(Res,Xsup);
             r2ave = evalR2(Xte,Xave); 
@@ -112,7 +113,7 @@ for nn = 1:numIter % random train/test split
             Nsamp(mm) = Ns;
             
             X3D = mapX3D([Xtr; XtrC]); % split (training set + extra chewie training for DAD)
-            [Rtmp, ResMC] = run3Ddad(X3D,Vr,Xte,numA,Methods,numsol);
+            [Rtmp, ResMC] = run3Ddad(X3D,Vr,Xte,A,Methods,numsol);
            
             Xave = averageDADSup(ResMC,Xsup);
             r2ave = evalR2(Xte,Xave); 
