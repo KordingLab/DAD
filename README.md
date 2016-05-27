@@ -25,3 +25,5 @@ script_runDAD
 ```
 This script will run DAD for three cases: within subject ('M'), combined subject ('MC'), and across subject ('C'). The output includes three structs, ResM, ResMC, and ResC, containing the embeddings for each case. If you decide to run the supervised decoder (which takes some time!), you can also find Xsup (supervised), Xave (average between DAD and Sup outputs), and Xls (the oracle estimate).
 ___
+
+<img width="1100" src="https://github.com/KordingLab/DAD/blob/master/images/MainFig_GitHubSite.jpg" data-action="zoom">
