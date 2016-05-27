@@ -33,7 +33,7 @@ supmethod = input('Enter 1 if you want to run the supervised method: ');
 Data0 = prepare_superviseddata(Ts,'chewie1','mihi',[]);
 Data = prepare_superviseddata(Ts,'mihi','mihi',[],0);
 [~,~,~,XtrC,~,~,~,~] = removedirdata(Data0,removedir);
-[Xtest,Ytest,Ttest,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
+[~,~,~,Xtrain,Ytrain,Ttrain,~,Ntrain] = removedirdata(Data,removedir);
 clear Data Data0
 
 %%
@@ -48,14 +48,9 @@ R2MC = zeros(1,numIter);
 R2Sup = zeros(2,numIter);
 R2Ave = zeros(3,numIter);
  
-for nn = 1:numIter % random train/test split
-        
-        % only uses 70% of neurons
-        %permz = randperm(size(Ytr,2));
-        %numNeurons = round(size(Ytr,2)*0.7);
-        %[Xtr,Ytr,Ttr,Xte,Yte,Tte,trainid,testid] = splitdataset(Xtrain,Ytrain(:,permz(1:numNeurons)),Ttrain,Ntrain,percent_samp);  
-        
-        % uses all neurons
+for nn = 1:numIter 
+          
+        % split dataset into train/test sets
         [Xtr,Ytr,Ttr,Xte,Yte,Tte,trainid,testid] = splitdataset(Xtrain,Ytrain,Ttrain,Ntrain,percent_samp); 
         numte = size(Yte,1);
         permzte = randperm(numte);
@@ -148,8 +143,11 @@ subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
 subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
 
 %%%%%%%%%% end script 
-% output =  ResM (results of DAD-M)
-%           ResMC (results of DAD-MC)
-%           ResC (results of DAD-C)
+% output =  ResM.V (results of DAD-M)
+%           ResMC.V (results of DAD-MC)
+%           ResC.V (results of DAD-C)
+%           Xsup (supervised)
+%           Xave (DAD+Sup)
+%           Xls (Oracle)
 %%%%%%%%%%
 
