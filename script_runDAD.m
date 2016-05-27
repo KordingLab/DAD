@@ -6,7 +6,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 setuppath
-savevars = 0; % set to 1 if you want to save the results
 numA = 180; %every 2 deg
 Ts=.20; 
 gridsz = 3;
@@ -87,7 +86,7 @@ for nn = 1:numIter % random train/test split
             [Wsup, ~, ~, ~]= crossVaL(Ytr, Xtr, Yte, lamnum, fldnum);
             Xsup = [Yte,ones(size(Yte,1),1)]*Wsup;
             r2sup = evalR2(mapX3D(Xte),mapX3D(Xsup));     
-            warning off, Wls = (Yte\Xte); 
+            warning off, Wls = (Yte\Xte); Xls = Yte*Wls;
             r2ls = evalR2(mapX3D(Xte),mapX3D(Yte*Wls)); 
             R2Sup(:,nn) = [r2sup,r2ls];
         
@@ -116,19 +115,41 @@ for nn = 1:numIter % random train/test split
                
 end
 
-% Figure - boxplot comparison of DAD and supervised approach
-figure; boxplot([R2M; R2MC; R2C; R2Sup(1,:); R2Ave(1,:); R2Sup(2,:)]');
-title([int2str(percent_train*100), '% train, ', num2str((1-percent_train)*100), '% test'])
+% Figure (1) - boxplot comparison of DAD and supervised approach
+if numIter>1
+    figure; boxplot([R2M; R2MC; R2C; R2Sup(1,:); R2Ave(1,:); R2Sup(2,:)]');
+    title([int2str(percent_samp*100), '% train, ', num2str((1-percent_samp)*100), '% test'])
+else
+    figure; 
+    plot([R2M; R2MC; R2C; R2Sup(1,:); R2Ave(1,:); R2Sup(2,:)],...
+        'o','MarkerSize',8); 
+    title(['DAD(M)           ',...
+           'DAD(MC)           ',...
+           'DAD(C)                   ',...
+           'Sup               ',...
+           'Sup+DAD             ',...
+           'Oracle             ']);
+end 
 
-% Figure - Visualization of 3D decoding
+T3D = repmat(Ttr,ceil(size(ResM.X3D,1)/length(Ttr)),1);
+
+% Figure (2) - Visualization of 3D decoding
 figure; 
-subplot(1,3,1); colorData(Xte,Tte); title('Ground truth')
-%subplot(1,3,1); colorData(ResM.V,Tte); title('Ground truth')
+subplot(3,3,1); colorData(Xte,Tte); title('Ground truth')
+subplot(3,3,2); colorData(Xtr,Ttr); title('Training kinematics (before)')
+subplot(3,3,3); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
 
+subplot(3,3,7); colorData(Xsup,Tte); title('Supervised')
+subplot(3,3,8); colorData(Xave,Tte); title('Averaged (DAD+Sup)')
+subplot(3,3,9); colorData(Xls,Tte); title('Oracle')
+
+subplot(3,3,4); colorData(ResM.V,Tte); title('DAD (Within-subject)')
+subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
+subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
 
 %%%%%%%%%% end script 
 % output =  ResM (results of DAD-M)
 %           ResMC (results of DAD-MC)
 %           ResC (results of DAD-C)
-
+%%%%%%%%%%
 

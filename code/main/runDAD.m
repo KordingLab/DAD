@@ -1,5 +1,5 @@
 function Res = runDAD(Yte,Xtr,gridsz,Tte,Xte,method,finealign)
-% LATEST MAIN DAD FUNCTION
+% MAIN DAD FUNCTION
 % Yte = neural test data (to decode)
 % Xtr = kinematics training data (target distribution for alignment)
 % gridsz = number of 3D-angles to test in cone alignment
@@ -27,6 +27,7 @@ M1{1} = 'FA';
 [Vr,~] = computeV(Yr,3,M1);
 
 Res = minKL_grid3D(Vr{1},normal(X3D),gridsz,method,finealign);
+Res.X3D = normal(X3D);
 
 if ~isempty(Tte)
     Res.R2 = evalR2(Res.V,mapX3D(Xte));
