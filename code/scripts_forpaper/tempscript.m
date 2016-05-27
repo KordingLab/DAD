@@ -1,1 +1,0 @@
-p_train = prob_grid(normal(X),bsz,k0);
