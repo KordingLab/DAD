@@ -4,6 +4,7 @@ function Res = runDAD(Yte,Xtr,gridsz,Tte,Xte,method,finealign)
 % Xtr = kinematics training data (target distribution for alignment)
 % gridsz = number of 3D-angles to test in cone alignment
 
+spikethr = 20;
 rfac = 5;
 nzvar = 0.15;
 
@@ -15,12 +16,18 @@ if nargin<7
     finealign=0;
 end
 
-% throw away neurons that dont fire (less than 20 spikes)
-Yr = Yte; Yr(:,sum(Yte)<20)=[]; 
+% throw away neurons that dont fire (less than spikethr spikes)
+Yr = Yte; Yr(:,sum(Yte)<spikethr)=[]; 
 
 % add noise to training data (blur training)
-Xnew = repmat(Xtr,rfac,1) + randn(size(Xtr,1)*rfac,2)*nzvar;
-X3D = mapX3D(Xnew); % split (training set + extra chewie training for DAD)
+
+if size(Xtr,2)==2
+    Xnew = repmat(Xtr,rfac,1) + randn(size(Xtr,1)*rfac,2)*nzvar;
+    X3D = mapX3D(Xnew); % split (training set + extra chewie training for DAD)
+    
+elseif size(Xtr,2)==3
+    X3D = repmat(Xtr,rfac,1) + randn(size(Xtr,1)*rfac,3)*nzvar;
+end
             
 % dimensionality reduction
 M1{1} = 'FA'; 
