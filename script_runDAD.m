@@ -14,7 +14,7 @@ randseed = randi(100,1);
 rng(randseed)
 removedir = [0, 1, 2];
 Ntot = 1027;
-numIter = 2;
+numIter = 20;
 M1{1} = 'FA'; % dont need dr toolbox for factor analysis 
 
 % parameters for DAD
@@ -150,18 +150,22 @@ if supmethod==1
 end
 
 % Figure (3) - Visualization of 2D Rotation Aligment
-figure; 
-subplot(3,3,1); colorData(Xte,Tte); title('Ground truth')
-subplot(3,3,2); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
-warning off, Wls = (Yte\Xte); Xls = Yte*Wls;
-subplot(3,3,3); colorData(Xls,Tte); title('Oracle')
-subplot(3,3,4); colorData(ResM.V,Tte); title('DAD (Within-subject)')
-subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
-subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
-subplot(3,3,7); colorData(ResM.Xrec,Tte); title('DAD+RotKL (Within-subject)')
-subplot(3,3,8); colorData(ResMC.Xrec,Tte); title('DAD+RotKL (Combined-subject)')
-subplot(3,3,9); colorData(ResC.Xrec,Tte); title('DAD+RotKL (Across-subject)')
+% figure; 
+% subplot(3,3,1); colorData(Xte,Tte); title('Ground truth')
+% subplot(3,3,2); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
+% warning off, Wls = (Yte\Xte); Xls = Yte*Wls;
+% subplot(3,3,3); colorData(Xls,Tte); title('Oracle')
+% subplot(3,3,4); colorData(ResM.V,Tte); title('DAD (Within-subject)')
+% subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
+% subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
+% subplot(3,3,7); colorData(ResM.Xrec,Tte); title('DAD+RotKL (Within-subject)')
+% subplot(3,3,8); colorData(ResMC.Xrec,Tte); title('DAD+RotKL (Combined-subject)')
+% subplot(3,3,9); colorData(ResC.Xrec,Tte); title('DAD+RotKL (Across-subject)')
 
+
+save(['results_script_runDAD_psamp_',num2str(percent_samp*100),...
+    'percent_train_numIter_', int2str(numIter),'.mat'],...
+    'R2M', 'R2C', 'R2MC', 'R2Sup', 'R2Ave')
 
 %%%%%%%%%% end script 
 % output =  ResM.V (results of DAD-M)
