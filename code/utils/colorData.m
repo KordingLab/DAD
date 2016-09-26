@@ -1,4 +1,4 @@
-function colorData2014(X,ID)
+function colorData(X,ID)
 
 idsz=max(ID);
 dsz=size(X,2);

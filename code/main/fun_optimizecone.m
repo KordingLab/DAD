@@ -16,14 +16,33 @@ end
 [Xout,resid] = compute_coneresid(Vcurr,X,x); 
 
 if strcmp(method,'KL')
-    % KL divergence
-    bsz = 50;
-    k0=ceil(size(X,1)^0.3);
-    k1=ceil(size(Xout,1)^0.3);
+    y = eval_KL(X,Xout);
+elseif strcmp(method,'SubAng')
+    vec0 = [0,0,1]; % z-axis
+    [~,ctrs] = kmeans(Xout,3);
+    out = pdist2(vec0,ctrs,'cosine');
+    
+    [~,ctrs] = kmeans(X,3);
+    out2 = pdist2(vec0,ctrs,'cosine');
+    
+    y = abs(max(out)-max(out2)) + abs(min(out)-min(out2));
+    
+elseif strcmp(method,'MaxDist')
+    [~,val] = knnsearch(X,Xout);
+    y = max(val);
 
-    p_train = prob_grid3D(normal(X),bsz,k0);
-    p_rot = prob_grid3D(normal(Xout),bsz,k1);
-    y = p_rot'*log(p_rot./p_train);
+%     vec0 = [0,0,1]; % z-axis
+%     [~,ctrs] = kmeans(Xout,3);
+%     out = pdist2(vec0,ctrs,'cosine');
+%     
+%     [~,ctrs] = kmeans(X,3);
+%     out2 = pdist2(vec0,ctrs,'cosine');
+%     
+%     vals = sort(out);
+%     vals2 = sort(out2);
+% 
+%     y = norm(vals-vals2)*0.1 + y1;
+
 else
     y = resid;
 end

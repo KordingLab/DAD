@@ -25,4 +25,9 @@ Xout = Xout3';
 %[Xout, ~,~,resid] = icp(Xn',normal(V2)');
 
 
+% figure, 
+% plot3(Xn(:,1),Xn(:,2),Xn(:,3),'o','MarkerSize',5)
+% hold on, plot3(Xout2(:,1),Xout2(:,2),Xout2(:,3),'rx','MarkerSize',5)
+% title(num2str(resid,3))
+
 end

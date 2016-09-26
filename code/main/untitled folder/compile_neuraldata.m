@@ -1,6 +1,14 @@
-function [Y,T,X] = compile_neuraldata(whichtargets,numSamp)
+function [Y,T,X] = compile_neuraldata(whichtargets,numSamp,numDelay,filename)
 
-load('testdata-foreva.mat')
+if nargin<3
+    numDelay=0;
+end
+
+if nargin>4
+    load(filename)
+else
+    load('testdata-foreva.mat')
+end
 
 spikes = binnedData.spikeratedata;
 times = binnedData.timeframe;
@@ -27,7 +35,7 @@ Y0(1:id(1)-1,:)=[];
 go_times = [];
 for i=1:L
     if length(setdiff(whichtargets,targets(i)))~=length(whichtargets)
-        go_times = [go_times, id(i):id(i)+numSamp];
+        go_times = [go_times, numDelay+id(i):numDelay+id(i)+numSamp];
     end
 end
 

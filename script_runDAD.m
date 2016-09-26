@@ -6,19 +6,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 setuppath
-numA = 180; %every 2 deg
-Ts=.20; 
-gridsz = 3;
-numsol = 5; 
-M1{1} = 'FA'; % dont need dr toolbox for factor analysis 
+numA = 90; %every 2 deg
+Ts=.20;
 percent_test = 1;
 numsteps=length(percent_test);
-method = 'KL';
 randseed = randi(100,1);
 rng(randseed)
 removedir = [0, 1, 2];
 Ntot = 1027;
-numIter = 1;
+numIter = 20;
+M1{1} = 'FA'; % dont need dr toolbox for factor analysis 
+
+% parameters for DAD
+opts.gridsz = 3;
+opts.method = 'KL';
+opts.nzvar=0;
+opts.rfac=0;
 
 %%%%% user input
 percent_samp = input('Amount to train on (scalar between 0,1): ');
@@ -58,21 +61,22 @@ for nn = 1:numIter
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Step 3A. Run 3D DAD (M)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        ResM = runDAD(Yte,Xtr,gridsz,Tte,Xte,method);
+        ResM = runDAD(Yte,Xtr,opts,Tte,Xte);
         R2M(nn) = ResM.R2;
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Step 3B. Run 3D DAD (MC)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% now for augmented training
-        ResMC = runDAD(Yte,[Xtr; XtrC],gridsz,Tte,Xte,method);
+        opts.method = method;
+        ResMC = runDAD(Yte,[Xtr; XtrC],opts,Tte,Xte);
         R2MC(nn) = ResMC.R2;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Step 3C. Run 3D DAD (C)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % now chewie training only
-        ResC = runDAD(Yte,XtrC,gridsz,Tte,Xte,method);
+        ResC = runDAD(Yte,XtrC,opts,Tte,Xte);
         R2C(nn) = ResC.R2;
         
         %%%% supervised & least-squares
@@ -128,19 +132,36 @@ end
 
 T3D = repmat(Ttr,ceil(size(ResM.X3D,1)/length(Ttr)),1);
 
-% Figure (2) - Visualization of 3D decoding
+% Figure (2) - Visualization of 3D decoding (if supervised)
+
+if supmethod==1
+    figure; 
+    subplot(3,3,1); colorData(Xte,Tte); title('Ground truth')
+    subplot(3,3,2); colorData(Xtr,Ttr); title('Training kinematics (before)')
+    subplot(3,3,3); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
+
+    subplot(3,3,7); colorData(Xsup,Tte); title('Supervised')
+    subplot(3,3,8); colorData(Xave,Tte); title('Averaged (DAD+Sup)')
+    subplot(3,3,9); colorData(Xls,Tte); title('Oracle')
+
+    subplot(3,3,4); colorData(ResM.V,Tte); title('DAD (Within-subject)')
+    subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
+    subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
+end
+
+% Figure (3) - Visualization of 2D Rotation Aligment
 figure; 
 subplot(3,3,1); colorData(Xte,Tte); title('Ground truth')
-subplot(3,3,2); colorData(Xtr,Ttr); title('Training kinematics (before)')
-subplot(3,3,3); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
-
-subplot(3,3,7); colorData(Xsup,Tte); title('Supervised')
-subplot(3,3,8); colorData(Xave,Tte); title('Averaged (DAD+Sup)')
-subplot(3,3,9); colorData(Xls,Tte); title('Oracle')
-
+subplot(3,3,2); colorData(ResM.X3D,T3D); title('Training kinematics (after)')
+warning off, Wls = (Yte\Xte); Xls = Yte*Wls;
+subplot(3,3,3); colorData(Xls,Tte); title('Oracle')
 subplot(3,3,4); colorData(ResM.V,Tte); title('DAD (Within-subject)')
 subplot(3,3,5); colorData(ResMC.V,Tte); title('DAD (Combined-subject)')
 subplot(3,3,6); colorData(ResC.V,Tte); title('DAD (Across-subject)')
+subplot(3,3,7); colorData(ResM.Xrec,Tte); title('DAD+RotKL (Within-subject)')
+subplot(3,3,8); colorData(ResMC.Xrec,Tte); title('DAD+RotKL (Combined-subject)')
+subplot(3,3,9); colorData(ResC.Xrec,Tte); title('DAD+RotKL (Across-subject)')
+
 
 %%%%%%%%%% end script 
 % output =  ResM.V (results of DAD-M)
