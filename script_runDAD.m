@@ -14,7 +14,7 @@ randseed = randi(100,1);
 rng(randseed)
 removedir = [0, 1, 2];
 Ntot = 1027;
-numIter = 20;
+numIter = 2;
 M1{1} = 'FA'; % dont need dr toolbox for factor analysis 
 
 % parameters for DAD
