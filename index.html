@@ -31,13 +31,26 @@
           <h3>
 <a id="distribution-alignment-decoding-dad" class="anchor" href="#distribution-alignment-decoding-dad" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Distribution Alignment Decoding (DAD)</h3>
 
-<p>DAD is an approach for brain decoding which aims to decode movements from neural activity. The details of DAD are contained in this paper.</p>
+<p>DAD is an approach for movement decoding that does not require simultaneous recordings of neural activity and motor output. </p>
 
-<p>EL Dyer, M Gheshlaghi Azar, HL Fernandes, M Perich, L Miller, KP Körding: 
-<strong>Cracking the neural code: A cryptography-inspired approach for brain decoding</strong>, 
-<a href="https://www.dropbox.com/s/qqdabo7drryq42m/Dyer_DAD2016.pdf?dl=0">Preprint</a>, May 2016. </p>
+<p><strong>Manuscript:</strong>
+EL Dyer, M Gheshlaghi Azar, HL Fernandes, M Perich, S Naufel, L Miller, KP Körding: 
+<em>A cryptography-based approach for movement decoding</em>, 
+<a href="http://dx.doi.org/10.1101/080861">bioRxiv</a>, October 2016. </p>
 
-<p><strong>Abstract:</strong> Brain decoders use neural recordings to infer a user’s mental state,  i.e.,  what someone is thinking, viewing, or their intended movement. Approaches for brain decoding typically rely on simultaneous measurements of the user’s mental state and their neural activity in order to train a decoder. However, there are many cases where measuring the brain state of interest along with neural activity is difficult.Here we introduce a new approach for decoding called distribution alignment decoding (DAD), that does not require direct measurement of the user’s mental state and their neural activity to find a mapping between the two.  We use thestatistics of movement, in the same way as cryptographers use the statistics of language, to find a mapping between neural activity and movement.  To do this,we find a linear decoder that aligns the distribution of its output with the typical distribution of the user’s intended movement by minimizing their KL-divergence.We apply our approach to a dataset collected from the motor cortex of non-human primates (NHPs) during a reaching task, and demonstrate regimes where DAD provides comparable and in some cases, better performance than a supervised decoder.  As DAD does not rely on training data with known correspondence between inputs (neural activity) and outputs (motor task), it promises to broaden the set of potential applications of brain decoding.</p>
+<p><strong>Abstract:</strong> Brain decoders use neural recordings to infer a user’s activity or intent. To train a decoder,
+we generally need infer the variables of interest (covariates) using simultaneously measured
+neural activity. However, there are many cases where this approach is not possible. Here we
+overcome this problem by introducing a fundamentally new approach for decoding called
+distribution alignment decoding (DAD). We use the statistics of movement, much like cryptographers
+use the statistics of language, to find a mapping between neural activity and motor
+variables. DAD learns a linear decoder which aligns the distribution of its output with the
+typical distribution of motor outputs by minimizing their KL-divergence. We apply our approach
+to a two datasets collected from the motor cortex of non-human primates (NHPs): a
+reaching task and an isometric force production task. We study the performance of DAD and
+find regimes where DAD provides comparable and in some cases, better performance than
+a typical supervised decoder. As DAD does not rely on the ability to record motor-related
+outputs, it promises to broaden the set of potential applications of brain decoding.</p>
 
 <h3>
 <a id="code-and-data" class="anchor" href="#code-and-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code and Data</h3>
@@ -47,9 +60,9 @@
 <h3>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>If you have questions, please contact edyer{at}northwestern{dot}edu.</p>
+<p>If you have questions, please contact Eva{dot}L{dot}Dyer{at}Gmail{dot}com.</p>
 
-<p><img src="https://github.com/KordingLab/DAD/blob/master/images/MainFig_GitHubSite.jpg%22%20data-action=%22zoom%22" alt="Figure 1."></p>
+<p><img src="https://raw.githubusercontent.com/KordingLab/DAD/master/images/MainFig_GitHubSite.jpg" alt="Figure 2"></p>
         </section>
 
         <aside id="sidebar">
