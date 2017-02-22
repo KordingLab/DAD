@@ -1,9 +1,9 @@
 ## Distribution Alignment Decoder (DAD) 
 This repo contains code to run the Distribution Alignment Decoder (DAD) method described in this paper. 
 
-__Dyer EL, Azar MG, Fernandes HL, and Kording KP "Cracking the neural code: A cryptography-inspired approach to movement decoding", arXiv 2016.__
+__Eva L Dyer, Mohammad Gheshlaghi Azar, Hugo L Fernandes, Matthew Perich, Stephanie Naufel, Lee Miller, Konrad Kording: A cryptography-based approach for movement decoding, doi: [https://doi.org/10.1101/080861](https://doi.org/10.1101/080861)__
 
-If you have questions, please contact edyer{at}northwestern{dot}edu.
+If you use any of the datasets and/or code in this repository, please cite this preprint. If you have questions, please contact evaLdyer{at}gmail{dot}com.
 ___
 ### Overview
 The main idea behind DAD is to decode movement kinematics from a neural dataset consisting of the firing rates of d neurons at N points in time. Typically, the number of time points exceeds the number of neurons.
