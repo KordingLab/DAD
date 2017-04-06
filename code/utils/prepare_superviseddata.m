@@ -83,7 +83,6 @@ Data.Ntest = Nte(tindte,:);
 
 end
 
-
 function [Y1, X1, T1, N1] =  getdata(whichmonkey,delT)
 
 if strcmp(whichmonkey,'mihi')

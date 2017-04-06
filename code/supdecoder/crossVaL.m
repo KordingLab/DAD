@@ -1,5 +1,5 @@
 
-function  [W, Xhat, R2Max, lamc]= crossVaL(Ytr, Xtr, Yte, lamnum, fldnum)
+function  [W, Xhat, R2Max, lamc]= crossVaL(Ytr, Xtr, lamnum, fldnum)
 
 d= size(Ytr);
 
