@@ -9,7 +9,6 @@ if nargin<5
     percent_split = 0.5;
 end
     
-
 [Y1,X1,T1, N1] =  getdata(monkeytr,delT);
     
 if strcmp(monkeytr,monkeyte) % split dataset
@@ -78,38 +77,5 @@ Data.Xtest = Xte(tindte,:);
 Data.Ytest = Yte(tindte,:);
 Data.Ttest = Tte(tindte,:);
 Data.Ntest = Nte(tindte,:);
-
-%Data.permutation = permz;
-
-end
-
-function [Y1, X1, T1, N1] =  getdata(whichmonkey,delT)
-
-if strcmp(whichmonkey,'mihi')
-    load Mihi_small
-    Dtr1=out_struct;
-    
-elseif strcmp(whichmonkey,'chewie1')
-     load('Chewie_10032013.mat')
-      Dtr1=out_struct;
-        
-elseif strcmp(whichmonkey,'chewie2')
-    load('Chewie_12192013.mat')
-    Dtr1=out_struct;
-    
-elseif strcmp(whichmonkey,'chewie3')
-    load('Chewie_M1_CO_VR_BL_07152015.mat')
-    Dtr1=out_struct;
-    
-elseif strcmp(whichmonkey,'chewie4')
-    load('Chewie_M1_CO_VR_BL_07162015.mat')
-    Dtr1=out_struct;
-else
-    display('Specify which dataset you wish me to prepare!')
-end
-
-tttr1  = ff_trial_table_co(Dtr1);
-[Y1   , X1 ,  T1,  N1]  =  getFR_overlap(Dtr1,  delT,  tttr1 , delT/2);
-clear Dtr1
 
 end
