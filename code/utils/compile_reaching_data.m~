@@ -40,15 +40,13 @@ for i=1:Ls
             idx = Nstart:Nend;
             
             if sfac>0
-                data1 = data1(idx,:);
-                data2 = data2(idx,:);              
                 tmp1 = cumsum(data1');
-                data1 = tmp1(:,min([1:floor(size(data1,1)/sfac)]*sfac,size(data1,1)))';
                 tmp2 = cumsum(data2');
-                data2 = tmp2(:,min([1:floor(size(data2,1)/sfac)]*sfac,size(data2,1)))';
-                idx = idx(min([1:floor(length(idx)/sfac)]*sfac,length(idx)));
+                data1 = tmp1(:,min([1:floor(size(Y1,1)/sfac)]*sfac,size(Y1,1)));
+                
+                data1 = data1(idx,:);
+                data2 = data2(idx,:);
             end
-            
             ntmp = ones(length(idx),1);
             ntmp(max(length(idx)-Nsamp,1):length(idx))=2;
 

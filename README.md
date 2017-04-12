@@ -19,7 +19,8 @@ ___
     - this folder contains multiple neural (spikes) and kinematics datasets collected from the M1 area of two non-human primate (NHP) subjects, Subject M (Mihili) and C (Chewie). See our paper for details about these datasets.
 
 ### Getting started...
-In Matlab, run our DAD demo:
+1. Download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz)
+2. In Matlab, run our demo:
 ``` matlab
 script_runDAD
 ```

@@ -54,7 +54,6 @@ for i=1:size(Fmat,1)
             %dists(i,j) = max(dvec);
         end
     end
-    i,
 %     close all, 
 %     figure,
 %     plot3(Yrot(:,1),Yrot(:,2),Yrot(:,3),'o')
