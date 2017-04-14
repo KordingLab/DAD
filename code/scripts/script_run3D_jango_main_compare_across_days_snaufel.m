@@ -8,17 +8,17 @@ numS = [4,4,4,4];
 
 %%
 % training set
-[Ytr,Ttr,Xtr] = compile_neuraldata(whichtarg,numS,numD,'binnedData_0801.mat');
+[Ytr,Ttr,Xtr] = compile_jango_neuraldata(whichtarg,numS,numD,'binnedData_0801.mat');
 
 % test set (1)
-[Yte2,Tte2,Xte2] = compile_neuraldata(whichtarg,numS,numD,'binnedData_0807.mat');
+[Yte2,Tte2,Xte2] = compile_jango_neuraldata(whichtarg,numS,numD,'binnedData_0807.mat');
 Yte2 = downsamp_nd(Yte2,2);
 
 % test set (2)
-[Yte3,Tte3,Xte3] = compile_neuraldata(whichtarg,numS,numD,'binnedData_0819.mat');
+[Yte3,Tte3,Xte3] = compile_jango_neuraldata(whichtarg,numS,numD,'binnedData_0819.mat');
 Yte3 = downsamp_nd(Yte3,2);
 
-[Yte4,Tte4,Xte4] = compile_neuraldata(whichtarg,numS,numD,'binnedData_0901.mat');
+[Yte4,Tte4,Xte4] = compile_jango_neuraldata(whichtarg,numS,numD,'binnedData_0901.mat');
 Yte4 = downsamp_nd(Yte4,2);
 
 %%% Train 01 - Test 07 (R2 = 0.4647 for Xrec)
@@ -27,8 +27,10 @@ Yte4 = downsamp_nd(Yte4,2);
 %%% Train 07 - Test 19 (R2 = 0.3787 , FA)
 
 % DAD - on test set (day 2)
-dimred_method = 'PCA';
-[Xrec2,Vflip2,Vr2] = runDAD3d(Xtr,Yte2,dimred_method);
+opts.dimred_method = 'PCA';
+opts.gridsz = 10;
+opts.numT = 60;
+[Xrec2,Vflip2,Vr2] = runDAD3d(Xtr,Yte2,opts);
 Hinv = Xrec2(:,1:2)'*pinv(Yte2)';
 
 %%%%% DAD - on second test set (day 3)

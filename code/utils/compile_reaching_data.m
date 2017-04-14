@@ -38,10 +38,10 @@ for i=1:Ls
         
         if Nstart < Nend
             idx = Nstart:Nend;
+            data1 = data1(idx,:);
+            data2 = data2(idx,:);
             
-            if sfac>0
-                data1 = data1(idx,:);
-                data2 = data2(idx,:);              
+            if sfac>0                  
                 tmp1 = cumsum(data1');
                 data1 = tmp1(:,min([1:floor(size(data1,1)/sfac)]*sfac,size(data1,1)))';
                 tmp2 = cumsum(data2');

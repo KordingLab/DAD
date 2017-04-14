@@ -1,4 +1,4 @@
-function [Xrec,Vflip,Vr,minKL,mean_resid] = runDAD3d(Xtr,Yte,opts)
+function [Xrec,Vflip,Vout,Vr,minKL,mean_resid] = runDAD3d(Xtr,Yte,opts)
 k = 3; % align in 3 dimensions (unless otherwise specified)
 
 % default parameters
@@ -35,6 +35,7 @@ Yr = remove_constcols(Yte);
 if length(dimred_method)>1
     M1{1} = dimred_method;
     tstart = tic; 
+   
     [Vr,~] = computeV(Yr,k,M1);
     telapsed = toc(tstart);
     
@@ -42,7 +43,7 @@ if length(dimred_method)>1
     Vr = Vr{1};
     
     % run 3D DAD alignment method
-    [Xrec,~,Vflip,minKL] = DAD_3Dsearch(Xn,normal(Vr),gridsz,numT,check2D);
+    [Xrec,Vout,Vflip,minKL] = DAD_3Dsearch(Xn,normal(Vr),gridsz,numT,check2D);
     mean_resid=0;
 else
     tstart = tic; 
@@ -54,7 +55,7 @@ else
     Vflip = cell(T,1);
     minKL = cell(T,1);
     for i=1:T
-        [Xrec{i},~,tmp,minKL{i}] = DAD_3Dsearch(Xn,normal(Vr{i}),sz,check2D);
+        [Xrec{i},Vout{i},tmp,minKL{i}] = DAD_3Dsearch(Xn,normal(Vr{i}),sz,check2D);
         Vflip{i} = tmp;
     end
 end
