@@ -1,9 +1,9 @@
-%script_compare_results_across_subjects
+% script_compare_results_across_subjects
 
-% global parameters for DAD
-opts.gridsz=10; 
-opts.numT = 80; 
-opts.check2D=0; 
+% global parameters for DAD (sampling density for KL-min search)
+opts.gridsz=10; % search over gridsz^3 samples (3D angle)
+opts.numT = 0; % vary the translation of each rotation angle (much slower!!, set to zero otherwise)
+opts.check2D=0; % dont check the 2D here, only search for 3D projections
 
 %% MIHI
 Ts = 0.2; % 200 ms bin size
@@ -30,14 +30,14 @@ title('Ground truth - Mihi')
 subplot(1,2,2), 
 colorData(Xrec_mihi,Tte),
 
-%% CHEWIE - 2D
+%% CHEWIE
 
-load('~/Downloads/Chewie_CO_FF_2016-10-07.mat')
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_07.mat')
 remove_dir = [0,4,6,7];
 [~,~,T0,Pos0,Vel0,~,~,~] = compile_reaching_data(trial_data,20,30,'go',remove_dir); 
 
 % script to run new data (chewie)
-load('~/Downloads/Chewie_CO_FF_2016-10-11.mat')
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_11.mat')
 
 numDfinal = 15;
 numSfinal = 30;
@@ -47,6 +47,7 @@ sfacfinal = 8;
 [Y1,~,T1,Pos,Vel,~,~,~] = compile_reaching_data(trial_data,numDfinal,numSfinal,'go',remove_dir);
 Y2= downsamp_nd(Y1,sfacfinal);
 
+%%%% 2D Analysis 
 tstart = tic;
 Mfinal{1} = drmethod_final; [V,Methods,~] = computeV(Y2, 3, Mfinal);
 Vcurr = V{1}(:,1:2); [Xrec_chewie,Vflip, yKL, flipInd] = rotated_KLmin(Vcurr,Vel0,90);
@@ -58,11 +59,11 @@ Pcorr_pos_chewie = evalTargetErr(Xrec_chewie(1500:end,:),normal(Pos(1500:end,:))
 
 figure, 
 subplot(1,2,1), 
-colorData(Xte,Tte),
+colorData(Vel,T1),
 title('Ground truth - Chewie')
 subplot(1,2,2), 
 colorData(Xrec_chewie,T1)
-
+title('DAD alignment')
 
 %% JANGO
 
@@ -77,14 +78,14 @@ Yte2 = downsamp_nd(Yte2,2);
 Yte3 = downsamp_nd(Yte3,2);
 
 tstart = tic;
-opts.dimred_method = 'PCA';
+opts.dimred_method = 'Isomap';
 [Xrec2,Vflip2,Vout2] = runDAD3d(Xtr,Yte2,opts);
 telapsed_jango2 = toc(tstart);
 R2_jango2 = evalR2(Xte2(:,1:2),Xrec2);
 Pcorr_jango2 = evalTargetErr(Xrec2,Xte2(:,1:2),Tte2);
 
 tstart = tic;
-opts.dimred_method = 'PCA';
+opts.dimred_method = 'Isomap';
 [Xrec3,Vflip3,Vout3] = runDAD3d(Xtr,Yte3,opts);
 telapsed_jango3 = toc(tstart);
 R2_jango3 = evalR2(Xte3(:,1:2),Xrec3);

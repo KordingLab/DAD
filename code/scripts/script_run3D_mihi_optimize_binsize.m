@@ -1,14 +1,14 @@
 
 % script to optimize bin size.
-removedir = [0, 1,3,6];
-numS = 15;
+removedir = [0, 1, 2, 6];
+numS = 30;
 numD = 0;
 M1{1} = 'FA'; 
 for i=1:6
     Data = prepare_superviseddata(0.05*i,'chewie1','mihi',[],0);
     [Xte,Yte,Tte,Xtr,Ytr,Ttr,Nte,Ntr] = removedirdata(Data,removedir,numS,numD);
     Yte2 = downsamp_nd(Yte,10);
-    [XrecM{i},VflipM{i},Vr{i},minKLM{i},meanresM(i)] = runDAD3d(normal(mapX3D(Xtr)),Yte2,'FA');
+    [XrecM{i},VflipM{i},Vout{i},Vr{i},minKLM{i},meanresM(i)] = runDAD3d(normal(mapX3D(Xtr)),Yte2,'FA');
     R2_alldata(i) = evalR2(Xte(:,1:2),XrecM{i});
     display(['R2 = ', num2str(R2_alldata(i),3), ' Ts = ', num2str(0.05*i,2)])
     Xtest{i} = Xte;

@@ -47,16 +47,22 @@ Data = prepare_superviseddata(Ts,'mihi','mihi',[],0);
 
 %[Vout,Vflip, yKL, flipInd] = rotated_KLmin(Xte,Xtr,90);
 
+%%
 % Figure (3) - Visualization of 2D Rotation Aligment
 figure; 
-subplot(1,6,1); colorData(Xte,Tte); title('Ground truth'), 
+subplot(1,2,1); 
+colorData(Xte,Tte); title('Ground truth'),
 
-for i=1:5
-   R2 = evalR2(Xte,Xrec_chewie{i});
-   subplot(1,6,1+i), colorData(Xrec_chewie{i},Tte); 
-   title(['R2 =', num2str(R2)]), 
-end
+subplot(1,2,2); 
+colorData(Xrec_chewie,Tte); title('DAD Alignment'),
 
-subplot(2,6,7:12),
-plot(yKL(1:end-15),'LineWidth',3)
-axis tight
+% 
+% for i=1:5
+%    R2 = evalR2(Xte,Xrec_chewie{i});
+%    subplot(1,6,1+i), colorData(Xrec_chewie{i},Tte); 
+%    title(['R2 =', num2str(R2)]), 
+% end
+
+%subplot(2,6,7:12),
+%plot(yKL(1:end-15),'LineWidth',3)
+%axis tight

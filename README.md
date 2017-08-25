@@ -16,7 +16,7 @@ ___
     - _supdecoder_. this folder contains code to implement a supervised decoder trained via 10-fold cross-validation to fit the regularization parameter in the supervised case.
     - _utils_. this folder contains helper functions (i.e., compute R2 scores, plot data, bin and split neural datasets).
 * __data__.
-    - this folder contains multiple neural (spikes) and kinematics datasets collected from the M1 area of two non-human primate (NHP) subjects, Subject M (Mihili) and C (Chewie). See our paper for details about these datasets.
+    - this folder contains multiple neural (spikes) and kinematics datasets collected from the M1 area of three non-human primate (NHP) subjects, Subject M (Mihi), Subject C (Chewie), and Subject J (Jango). See our paper for details about these datasets.
 
 ### Getting started...
 1. Download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz)
@@ -28,3 +28,5 @@ This script will run DAD on data collected from Subject M and visualize the resu
 ___
 
 <img width="1100" src="https://github.com/KordingLab/DAD/blob/master/images/MainFig_GitHubSite.jpg" data-action="zoom">
+
+If you have difficulties running the mex files in the dimensionality reduction toolbox (above), please see the Section entitled "Pitfalls" in the Readme.txt in the drtoolbox.

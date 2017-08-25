@@ -47,7 +47,7 @@ numsamp = [0.1,0.2,0.3,0.4];
 %numsamp = 0.2;
 M2{1} = 'PCA';
 
-numIter=10;
+numIter=50;
 R2vals = zeros(2,length(numNeurons),length(numsamp),numIter);
 for nn = 1:numIter
 for j=1:length(numsamp)
@@ -63,14 +63,18 @@ for i=1:length(numNeurons)
     display(['Neurons = ', int2str(numNeurons(i))])
     display(['DAD R2 = ', num2str(R2vals(1,i,j,nn),3)]),
     display(['LS R2 = ',num2str(R2vals(2,i,j,nn),3)])
-    display('~~~~~~~~~~~~~~~')
+    disp('~~~~~~~~~~~~~~~')
 end
 end
-save(['embeddings-synthetic-expt-full-8by4-',int2str(69+nn)]),
-Res = cell(length(numNeurons),length(numsamp));
+%save(['embeddings-synthetic-expt-full-8by4-',int2str(69+nn)]),
+%Res = cell(length(numNeurons),length(numsamp));
 end
 
-%figure, 
+
+figure,
+plot(squeeze(median(R2vals(1,:,:,:),4)),'--'), hold on,
+plot(squeeze(median(R2vals(2,:,:,:),4)),'-')
+
 %subplot(1,3,1), colorData(Xte,Tte)
 %subplot(1,3,2), colorData(Vr{1}(:,1:2),Tte)
 %subplot(1,3,3), colorData(Vout,Tte)

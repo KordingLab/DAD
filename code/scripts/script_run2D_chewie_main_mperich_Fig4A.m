@@ -1,12 +1,12 @@
 %%%%% script to test DAD for different hyperparameters %%%%%
 % script to create Fig. 3E panel (Chewie results)
 
-load('~/Downloads/Chewie_CO_FF_2016-10-07.mat')
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_07.mat')
 remove_dir = [0,4,6,7];
 [~,~,T0,Pos0,Vel0,~,~,~] = compile_reaching_data(trial_data,20,30,'go',remove_dir); 
 
 % script to run new data (chewie)
-load('~/Downloads/Chewie_CO_FF_2016-10-11.mat')
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_11.mat')
 
 % define hyper parameters
 numDelays = [5, 10, 15, 20, 25];
