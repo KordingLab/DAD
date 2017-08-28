@@ -1,4 +1,5 @@
 addpath([pwd,'/data/'])
+addpath([pwd,'/data/opt_params'])
 addpath([pwd,'/data/data/Chewie'])
 addpath([pwd,'/data/data/Jango'])
 addpath([pwd,'/data/data/Mihi'])

@@ -19,10 +19,14 @@ load optimal_parameters_chewie_removedir_0126
 %%
 
 % Mihi training kinematics
-load optimal_parameters_mihi
-opts.dimred_method = drmethod_maxR2;
+load('optimal_parameters_mihi_optimize_D1_1.mat')
+opts.dimred_method = Results.drmethod_maxR2;
 opts.gridsz = 10;
-[Xrec1,~,~,~,~] = runDAD3d(X_c1,Ymihi,opts); 
+Results2 = apply_mihimodelresults(Results,2,'optimal_parameters_mihi_optimize_D1_1.mat'); 
+
+
+
+[Xrec1,~,~,~,~] = runDAD3d(Params.Xtr,Results.Yte_maxR2,opts); 
 R2val_mihi_modelopt = evalR2(X_m1,Xrec1);
 
 

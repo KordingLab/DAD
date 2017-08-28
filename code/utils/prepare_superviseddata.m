@@ -13,8 +13,6 @@ end
     
 if strcmp(monkeytr,monkeyte) % split dataset
     
-    %percent_split = 0.4;
-    
     Y1(:,find(sum(Y1)==0))=[];
     szY = size(Y1,1);
     

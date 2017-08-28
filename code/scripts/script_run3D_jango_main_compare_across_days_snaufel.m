@@ -1,6 +1,5 @@
 
 % 1. set parameters for pre-processing + running DAD
-psamp = 0.5; % percentage of data points used for training
 numIter = 1; % number os iterations (to compute stats)
 whichtarg = [2,5,6,8]; % which targets to select reaches from
 numD = [2,2,2,2];
@@ -36,26 +35,31 @@ Hinv = Xrec2(:,1:2)'*pinv(Yte2)';
 %%%%% DAD - on second test set (day 3)
 dimred_method = 'PCA';
 [Xrec3,Vflip3,Vr3] = runDAD3d(Xtr,Yte3,dimred_method);
-[Xrot3,id3] = find_closest_rot(Vflip3,Yte3,Hinv);
+
+%[Xrot3,id3] = find_closest_rot(Vflip3,Yte3,Hinv);
 
 %%%%% DAD - on second test set (day 3)
 dimred_method = 'Isomap';
 [Xrec4,Vflip4,Vr4] = runDAD3d(Xtr,Yte4,dimred_method);
-[Xrot4,id] = find_closest_rot(Vflip4,Yte4,Hinv);
-
-visualize_performance_DAD(Xrec2,Xte2,Yte2,Tte2,Vr2,Xtr,Ttr);
-visualize_performance_DAD(Xrec3,Xte3,Yte3,Tte3,Xrot3,Xtr,Ttr);
-visualize_performance_DAD(Xrec4,Xte4,Yte4,Tte4,Xrot4,Xtr,Ttr);
+%[Xrot4,id] = find_closest_rot(Vflip4,Yte4,Hinv);
 
 %%
-display('Xrec2')
-evalR2(Xrec2,normal(Xte2(:,1:2)))
-display('Xrec3')
-evalR2(Xrec3,normal(Xte3(:,1:2)))
-display('Xrec4')
-evalR2(Xrec4,normal(Xte4(:,1:2)))
-display('Xrot3')
-evalR2(Xrot3,normal(Xte3(:,1:2)))
-display('Xrot4')
-evalR2(Xrot4,normal(Xte4(:,1:2)))
+
+
+
+%visualize_performance_DAD(Xrec2,Xte2,Yte2,Tte2,Vr2,Xtr,Ttr);
+%visualize_performance_DAD(Xrec3,Xte3,Yte3,Tte3,Xrot3,Xtr,Ttr);
+%visualize_performance_DAD(Xrec4,Xte4,Yte4,Tte4,Xrot4,Xtr,Ttr);
+
+%%
+% display('Xrec2')
+% evalR2(Xrec2,normal(Xte2(:,1:2)))
+% display('Xrec3')
+% evalR2(Xrec3,normal(Xte3(:,1:2)))
+% display('Xrec4')
+% evalR2(Xrec4,normal(Xte4(:,1:2)))
+% display('Xrot3')
+% evalR2(Xrot3,normal(Xte3(:,1:2)))
+% display('Xrot4')
+% evalR2(Xrot4,normal(Xte4(:,1:2)))
 

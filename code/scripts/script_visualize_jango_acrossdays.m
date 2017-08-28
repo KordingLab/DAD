@@ -1,10 +1,11 @@
-% create Jango figure - across days - model selection
+% Create Jango figure - across days - model selection
+% Models:  minimum KL (1), maxR2 (2), KLsmooth (3), maxTargets (4) 
 
-param_savename = 'optimal_parameters_jango_removedir_0126_train_day1';
-model_select = 1; %minimum KL (1), maxR2 (2), KLsmooth (3), maxTargets (4) 
-whichtrain = 1; 
-%param_savename = 'optimal_parameters_jango_removedir_0126_train_day2';
-script_run2D_jango_applymodelselection
+whichtrain = 1; model_select =1; 
+load('optimal_parameters_jango_optimize_D1.mat')
+Results.monkey='jango';
+Results = apply_2Dmodelselect(Results,model_select);
+
 
 R2vals_DAD(1,1) = evalR2(Vout1,Xte1(:,1:2));
 R2vals_DAD(1,2) = evalR2(Vout2,Xte2(:,1:2));

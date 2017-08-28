@@ -1,4 +1,4 @@
-function Xr = LSoracle(Xte,Yte)
+function [Xr,Hinv] = LSoracle(Xte,Yte)
 
 Xn = normal(Xte);
 Hinv = Xn(:,1:2)'*pinv(Yte)';

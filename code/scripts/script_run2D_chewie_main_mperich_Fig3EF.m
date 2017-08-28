@@ -1,19 +1,25 @@
-%%%%% script to test DAD for different hyperparameters %%%%%
-% script to create Fig. 3E panel (Chewie results)
+%%%%% script to test DAD for different hyperparameters and create Fig. 3E panel
+% max R2 (25,35,Isomap,8) = 0.5516
+% min KL (10,35,Isomap,8) = 0.4204
+% smooth KL (15,30,Isomap,8) = 0.3941 (same params as sequential approach)
+% Kalman Filter = 0.4909
+% Supervised = 0.5399
+% Oracle = 0.6186
 
-load('~/Documents/repos/DAD/data/Chewie/Chewie_CO_FF_2016-10-07.mat')
+
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_07.mat')
 remove_dir = [0,4,6,7];
 [~,~,T0,Pos0,Vel0,~,~,~] = compile_reaching_data(trial_data,20,30,'go',remove_dir); 
 
 % script to run new data (chewie)
-load('~/Documents/repos/DAD/data/Chewie/Chewie_CO_FF_2016-10-11.mat')
+load('~/Documents/GitHub/DAD/data/data/Chewie/Chewie_CO_FF_2016_10_11.mat')
 
 % define hyper parameters
 numDelays = [5, 10, 15, 20, 25];
 numSamples = [10, 15, 20, 25, 30, 35, 40];
 
 % fix smoothing factor and dim red method
-SmoothingFac = [4, 8];  %SmoothingFac = 8; % optimized through finding min-KL
+SmoothingFac = [4, 6, 8];  %SmoothingFac = 8; % optimized through finding min-KL
 clear M1
 M1{1} = 'PCA'; 
 M1{2} = 'Isomap';
@@ -52,8 +58,8 @@ for k1=1:length(numDelays)
                 [Vout,~, yKL, flipInd] = rotated_KLmin(Vcurr,Vel0,90);
                 toc
                 R2val(k1,k2,i,j,iter) = evalR2(Vel(:,1:2),Vout(:,1:2));
-                Pcorr_vel(k1,k2,i,j,iter) = evalCorrectTargets(normal(Vout),normal(Vel),T1);
-                Pcorr_pos(k1,k2,i,j,iter) = evalCorrectTargets(normal(Vout),normal(Pos),T1);
+                Pcorr_vel(k1,k2,i,j,iter) = evalTargetErr(normal(Vout),normal(Vel),T1);
+                Pcorr_pos(k1,k2,i,j,iter) = evalTargetErr(normal(Vout),normal(Pos),T1);
                 KLmin(k1,k2,i,j,iter) = min(yKL);
                 KLmedian(k1,k2,i,j,iter) = median(yKL(flipInd));
                 Vout_all{k1,k2,i,j,iter}=Vout;
@@ -74,7 +80,9 @@ end % end k1
 end % end numIter
 
 
-% Find model with smallest KL (min-KL)
+
+%% minKL - model selection - find model with smallest KL (min-KL)
+
 tmp = KLmin;
 [~,idd] = min(tmp(:));
 [i1,i2,i3,i4] = ind2sub(size(tmp),idd);
@@ -85,21 +93,22 @@ sfachat = SmoothingFac(i3);
 drmethod_hat = M1(i4);
 R2val_hat = R2val(i1,i2,i3,i4); % final R2 for best solution (min KL)
 
-%%%%%%%% Parameters selected by finding minimum KL-div (stable)
 [Y1,~,T1,~,Vel,~,~,~] = compile_reaching_data(trial_data,numDhat,numShat,'go',remove_dir);
 Y2= downsamp_nd(Y1,sfachat);
 [V,~,~] = computeV(Y2, 3, drmethod_hat);
 Vcurr = V{1}(:,1:2); 
 [Vout,~, ~, ~] = rotated_KLmin(Vcurr,normal(Vel0),90);
+Pcorrtarg_hat = evalTargetErr(Vout,normal(Vel),T1);
 
+%%
 figure, 
 subplot(1,2,1), colorData(normal(Vel0),T0), title('Test Data (ground truth)')
 subplot(1,2,2), colorData(Vout,T1), title(['Result from 2D-DAD (R2 = ',...
                                            num2str(evalR2(Vout,Vel),2)])
                                
-Pcorrtarg_hat = evalCorrectTargets(Vout,normal(Vel),T1);
                                        
-%% Parameters selected via sequential approach
+%% Run DAD with sequential model selection method
+
 numDfinal = 15;
 numSfinal = 30;
 drmethod_final = 'Isomap';
@@ -114,33 +123,33 @@ Vcurr = V{1}(:,1:2);
 [Vout,Vflip, yKL, flipInd] = rotated_KLmin(Vcurr,Vel0,90);
 
 R2DAD = evalR2(Vout(1500:end,:),Vel(1500:end,:));  
-Pcorr_vel_DAD = evalCorrectTargets(Vout(1500:end,:),normal(Vel(1500:end,:)),T1(1500:end));
-Pcorr_pos_DAD = evalCorrectTargets(Vout(1500:end,:),normal(Pos(1500:end,:)),T1(1500:end));
+Pcorr_vel_DAD = evalTargetErr(Vout(1500:end,:),normal(Vel(1500:end,:)),T1(1500:end));
+Pcorr_pos_DAD = evalTargetErr(Vout(1500:end,:),normal(Pos(1500:end,:)),T1(1500:end));
 
-%% Oracle
+%% Supervised methods
+
+%%% oracle decoder
 Xr = LSoracle(Vel,Y2);
 R2Oracle = evalR2(Xr(1500:end,:),Vel(1500:end,:));  
-Pcorr_vel_Oracle = evalCorrectTargets(Xr(1500:end,:),normal(Vel(1500:end,:)),T1(1500:end));
-Pcorr_pos_Oracle = evalCorrectTargets(Xr(1500:end,:),normal(Pos(1500:end,:)),T1(1500:end));
+Pcorr_vel_Oracle = evalTargetErr(Xr(1500:end,:),normal(Vel(1500:end,:)),T1(1500:end));
+Pcorr_pos_Oracle = evalTargetErr(Xr(1500:end,:),normal(Pos(1500:end,:)),T1(1500:end));
 
 % kalman filter
 [A, C, Q, R] = train_kf(Vel(1:1200,:),Y2(1:1200,:));
 [Xkf, ~, ~, ~] = kalman_filter(Y2(1500:end,:)', A, C, Q, R, zeros(2,1), eye(2));
 R2KF = evalR2(Xkf',Vel(1500:end,:));  
-Pcorr_vel_KF = evalCorrectTargets(Xkf',normal(Vel(1500:end,:)),T1(1500:end));
-Pcorr_pos_KF = evalCorrectTargets(Xkf',normal(Pos(1500:end,:)),T1(1500:end));
+Pcorr_vel_KF = evalTargetErr(Xkf',normal(Vel(1500:end,:)),T1(1500:end));
+Pcorr_pos_KF = evalTargetErr(Xkf',normal(Pos(1500:end,:)),T1(1500:end));
 
 % supervised linear decoder
 [W, ~, ~, ~]= crossVaL(Y2(1:1200,:), Vel(1:1200,:), 500, 100);
 Xsup = [Y2(1500:end,:), ones(size(Y2(1500:end,:),1),1)]*W;
 R2Sup = evalR2(Xsup,Vel(1500:end,:)); 
-Pcorr_vel_Sup = evalCorrectTargets(Xsup,Vel(1500:end,:),T1(1500:end));
-Pcorr_pos_Sup = evalCorrectTargets(Xsup,Pos(1500:end,:),T1(1500:end));
+Pcorr_vel_Sup = evalTargetErr(Xsup,Vel(1500:end,:),T1(1500:end));
+Pcorr_pos_Sup = evalTargetErr(Xsup,Pos(1500:end,:),T1(1500:end));
 
-%%%% RESULTS
-% [Y1,~,T1,Pos,Vel,~,~,~] = compile_reaching_data(trial_data,40,50,[0,4,6,7]);
-% R2 = 0.5465, Pcorr_vel = 0.9830
 
+%%
 %%%% to create Fig. 3F in paper
 figure,
 subplot(4,5,[1,6]), colorData(Vel0,T0), axis tight
@@ -157,27 +166,6 @@ subplot(4,5,[10,15,20]), colorData(normal(Xsup),T1(1500:end)), axis tight, title
 
 %% Smoothed Model Estimate
 
-% Fmat = dftmtx(length(KLmin(:)));
-% coef = Fmat'*KLmin(:);
-% coef(find(abs(coef)<0.35))=0;
-% KLsmooth=abs(Fmat*coef); % smoothed optimization parameters
-% [~,id] = min(KLsmooth);
-% 
-% figure, 
-% plot(KLmin(:)./norm(KLmin(:))), 
-% hold on, plot(KLsmooth./norm(KLsmooth)), axis tight,
-% hold off
-% 
-% [~,idd] = min(KLsmooth);
-% [i1,i2,i3,i4] = ind2sub(size(KLmin),idd);
-% 
-% numD_smooth = numDelays(i1);
-% numS_smooth = numSamples(i2);
-% sfac_smooth = SmoothingFac(i3);
-% drmethod_smooth = M1(i4);
-% R2val_smooth = R2val(i1,i2,i3,i4); % final R2 for best solution (min KL)
-% 
-
 %%%% smoothed KL divergence
 Vals = smooth(KLmin(:));
 [~,id] = min(Vals);
@@ -191,4 +179,47 @@ numS_smooth = numSamples(i2);
 sfac_smooth = SmoothingFac(i3);
 drmethod_smooth = M1(i4);
 R2val_smooth = R2val(i1,i2,i3,i4); % final R2 for best solution (min KL)
+
+
+%% Max R2
+
+[~,idd] = max(R2val(:));
+[i1,i2,i3,i4] = ind2sub(size(R2val),idd);
+numD_maxR2 = numDelays(i1);
+numS_maxR2 = numSamples(i2);
+sfac_maxR2 = SmoothingFac(i3);
+drmethod_maxR2 = M1(i4);
+R2val_maxR2 = R2val(i1,i2,i3,i4); % final R2 for best solution (min KL)
+
+
+
+%% create box plots in Fig 3
+
+% look at spread as function of DR method
+figure,
+tmp = KLmin(:,:,:,1,:);
+tmp2 = KLmin(:,:,:,2,:);
+tmp3 = KLmin(:,:,:,3,:);
+subplot(1,3,1), boxplot([tmp2(:),tmp(:),tmp3(:)])
+
+% look at spread as fn of smoothing kernel width
+tmp = KLmin(:,:,1,:,:);
+tmp2 = KLmin(:,:,2,:,:);
+tmp3 = KLmin(:,:,3,:,:);
+subplot(1,3,2), boxplot([tmp3(:),tmp2(:),tmp(:)])
+
+tmp_total=[];
+for i=7:-1:1
+    tmp = KLmin(:,i,:,:,:);
+    tmp_total = [tmp_total,tmp(:)];
+end
+subplot(1,3,3), boxplot(tmp_total)
+
+
+
+
+
+
+
+
 
