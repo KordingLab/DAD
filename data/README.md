@@ -7,5 +7,5 @@ If you use any of the datasets and/or code contained in this repository, please 
 ___
 ### Download data
 If you want to download the data used in our paper and demos,
-please download the mat files [here](https://dl.dropboxusercontent.com/u/1260288/Data/DAD-Data/DAD-data-8-24-2017.zip).
+please download the mat files [here](https://drive.google.com/open?id=0B-0051irTHPodWF1cC1lTm5DYjQ).
 To use some of the test scripts in the repo, make sure to save the mat files in this folder ('/DAD/data/').
