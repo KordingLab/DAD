@@ -17,7 +17,7 @@ ___
     - _utils_. this folder contains helper functions (i.e., compute R2 scores, plot data, bin and split neural datasets).
 
 ### Getting started...
-1. Download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz). If you have difficulties running the mex files in the dimensionality reduction toolbox (above), please see the Section entitled "Pitfalls" in the Readme.txt in the drtoolbox.
+1. Download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz). If you have difficulties running the mex files in the dimensionality reduction toolbox, please see the Section entitled "Pitfalls" in the Readme.txt in the drtoolbox.
 2. To run the scripts and examples in this repository, download the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in the /data folder.
 3. In Matlab, run our demo:
 ``` matlab
