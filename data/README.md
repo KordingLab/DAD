@@ -6,6 +6,4 @@ __Eva L Dyer, Mohammad Gheshlaghi Azar, Hugo L Fernandes, Matthew Perich, Stepha
 If you use any of the datasets and/or code contained in this repository, please cite this preprint. If you have questions, please contact evaLdyer{at}gmail{dot}com.
 ___
 ### Download data
-If you want to download the data used in our paper and demos,
-please download the mat files [here](https://drive.google.com/open?id=0B-0051irTHPodWF1cC1lTm5DYjQ).
-To use some of the test scripts in the repo, make sure to save the mat files in this folder ('/DAD/data/').
+To run the scripts and examples in this repository, download the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in this folder (/DAD/data).
