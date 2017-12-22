@@ -13,3 +13,5 @@ Ttr = test target locations (0-7)
 Xte = training velocity data
 
 Xtr = test velocity data
+
+** This is the same dataset used in the main demo script, script_runDAD.m **
