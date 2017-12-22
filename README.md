@@ -1,14 +1,14 @@
 ## Distribution Alignment Decoder (DAD)
 This repo contains code to run the Distribution Alignment Decoder (DAD) method described in this paper.
 
-__Eva L Dyer, Mohammad Gheshlaghi Azar, Matthew Perich, Hugo L Fernandes, Stephanie Naufel, Lee Miller, Konrad Kording: A cryptography-based approach for movement decoding, doi: [https://doi.org/10.1101/080861](https://doi.org/10.1101/080861)__
+__Dyer, E. L., Azar, M. G., Perich, M. G., Fernandes, H. L., Naufel, S., Miller, L. E., & Körding, K. P. (2017). A cryptography-based approach for movement decoding. Nature Biomedical Engineering, 1(12), 967. [doi:10.1038/s41551-017-0169-7](http://rdcu.be/Bafy)__
 
-If you use any of the datasets and/or code in this repository, please cite this preprint. If you have questions, please contact evaLdyer{at}gmail{dot}com.
+If you use any of the datasets and/or code in this repository, please cite this paper. If you have questions, please contact evaLdyer{at}gmail{dot}com.
 ___
 ### Overview
 The main idea behind DAD is to decode movement kinematics from a neural dataset consisting of the firing rates of d neurons at N points in time. Typically, the number of time points exceeds the number of neurons.
 
-DAD takes a neural dataset __Y__ as its input, along with a target kinematics dataset __X__ to align __Y__ to. In our implementation, we assume __X__ is a Tx2 matrix and __Y__ is a Nxd matrix, where $N$ and $T$ are not assumed to be equal.
+DAD takes a neural dataset __Y__ as its input, along with a target kinematics dataset __X__ to align __Y__ to. In our implementation, we assume __X__ is a Tx2 matrix and __Y__ is a Nxd matrix, where N and T are not assumed to be equal.
 ___
 ### What's here... ###
 * __code__
