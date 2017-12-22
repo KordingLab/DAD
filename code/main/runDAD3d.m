@@ -2,10 +2,10 @@ function [Xrec,Vflip,Vout,Vr,minKL,mean_resid] = runDAD3d(Xtr,Yte,opts)
 k = 3; % align in 3 dimensions (unless otherwise specified)
 
 % default parameters
-gridsz=5;
-dimred_method= 'PCA';
-numT = 1;
-check2D = 0; % dont check 2D embedding
+gridsz=5; % search over 5^3 angles in 3D search
+dimred_method= 'PCA'; % default dim reduction method
+numT = 0; % don't translate in search
+check2D = 0; % default - dont check 2D embedding
 
 if nargin>2
     if isfield(opts,'gridsz')

@@ -16,7 +16,7 @@ ___
     - _supdecoder_. this folder contains code to implement a supervised decoder trained via 10-fold cross-validation to fit the regularization parameter in the supervised case.
     - _utils_. this folder contains helper functions (i.e., compute R2 scores, plot data, bin and split neural datasets).
 
-### Running our demo...
+### Running DAD on data from Subject M ...
 1. In Matlab, include all of the folders in this repo to your path and then run our demo:
 ``` matlab
 script_runDAD
@@ -24,9 +24,17 @@ script_runDAD
 This script will run DAD on data collected from Subject M and visualize the results.
 * Note: To run this demo, you will need the Statistics toolbox in Matlab.* 
 
+### Running DAD on data from Subject C ...
+1. Our method can be used with a variety of different dimensionality reduction methods. To run this demo and try different methods for dimensionality reduction, download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz). If you have difficulties running the mex files in the dimensionality reduction toolbox, please see the Section entitled "Pitfalls" in the Readme.txt in the drtoolbox.
+1. In Matlab, include all of the folders in this repo to your path and then run our demo:
+``` matlab
+script_runDAD_comparewithsup
+```
+This script will run DAD, the oracle decoder, linear supervised method, and Kalman filter on data collected from Subject C.
+* Note: To run this demo, you will need the Statistics toolbox in Matlab.* 
+
 ### Exploring DAD on more datasets...
-1. Our method can be used with a variety of different dimensionality reduction methods. To try different methods, download Laurens van der Maaten's [dimensionality reduction toolbox](https://lvdmaaten.github.io/drtoolbox/code/drtoolbox.tar.gz). If you have difficulties running the mex files in the dimensionality reduction toolbox, please see the Section entitled "Pitfalls" in the Readme.txt in the drtoolbox.
-2. To run the scripts and examples in this repository, you will need to download the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in the /data folder.
+1. To run the other scripts and examples in this repository, you will need to download the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in the /data folder.
 ___
 
 <img width="1100" src="https://github.com/KordingLab/DAD/blob/master/images/MainFig_GitHubSite.jpg" data-action="zoom">
