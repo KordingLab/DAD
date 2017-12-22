@@ -96,5 +96,3 @@ subplot(4,4,14), colorData(Vout42,Tte2), title(num2str(evalR2(Vout42,Xte2(:,1:2)
 subplot(4,4,15), colorData(Vout43,Tte3), title(num2str(evalR2(Vout43,Xte3(:,1:2)),3))
 subplot(4,4,16), colorData(Vout44,Tte4), title(num2str(evalR2(Vout44,Xte4(:,1:2)),3))
 
-
-

@@ -25,7 +25,7 @@ R2V= crossval(f, YE , Xtr,'kfold',fldnum);
 R2(i)= mean(R2V);
 R2C= R2(i);
 
-end;
+end
 
 [R2Max,Ind]= max(R2);
 lamc= lamvect(Ind);
