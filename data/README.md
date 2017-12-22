@@ -10,4 +10,4 @@ ___
 The demo folder has the two datasets (from Subject M and Subject C) used to run the demo scripts (script_runDAD.m and script_runDAD_comparewithsup.m).
 
 ### Download data
-To run the scripts and examples in this repository, download the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in this folder (/DAD/data).
+To run other scripts and examples in this repository, download the rest of the data [here](https://www.dropbox.com/s/nrgnte5m34xb18n/DAD-data-10-21-2017.zip?dl=0). Once you download and unzip this folder, put both of the folders (data and parameter_matfiles) in this folder (/DAD/data).
